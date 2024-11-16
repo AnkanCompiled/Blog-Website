@@ -1,14 +1,13 @@
-import Routes from "./routes";
+import React from "react";
 import { AuthProvider } from "./context/authContext";
+import RouterMap from "./routes/RouterMap";
 
-function App() {
+export default function App() {
   return (
     <AuthProvider>
       <div className="h-screen font-roboto">
-        <Routes />
+        <RouterMap />
       </div>
     </AuthProvider>
   );
 }
-
-export default App;
