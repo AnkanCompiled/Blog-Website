@@ -31,13 +31,7 @@ export default function RegisterComponent(props) {
   };
 
   return (
-    <div
-      className={
-        isVisible
-          ? "flex justify-center bg-black bg-opacity-30  w-screen h-screen fixed shadow-md"
-          : "opacity-0 fixed"
-      }
-    >
+    <div className={isVisible ? "form-screen" : "opacity-0 fixed"}>
       <div
         className={`form-box ${
           isVisible ? "translate-y-0 opacity-100" : "translate-y-2/4 opacity-0"
@@ -54,10 +48,7 @@ export default function RegisterComponent(props) {
           </button>
         </div>
 
-        <form
-          className="grid justify-center text-center"
-          onSubmit={handleSubmit(onSubmit)}
-        >
+        <form onSubmit={handleSubmit(onSubmit)}>
           <h1 className="form-header text-2xl">Join Us</h1>
           <h1 className="form-header text-xl">Create a BloggerNet account</h1>
           <FormNameComponent register={register} value="name" />

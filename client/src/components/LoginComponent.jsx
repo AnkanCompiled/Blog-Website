@@ -30,13 +30,7 @@ export default function LoginComponent(props) {
   };
 
   return (
-    <div
-      className={
-        isVisible
-          ? "flex justify-center bg-black bg-opacity-30  w-screen h-screen fixed shadow-md"
-          : "opacity-0 fixed"
-      }
-    >
+    <div className={isVisible ? "form-screen" : "opacity-0 fixed"}>
       <div
         className={`form-box ${
           isVisible ? "translate-y-0 opacity-100" : "translate-y-1/4 opacity-0"
@@ -53,10 +47,7 @@ export default function LoginComponent(props) {
           </button>
         </div>
 
-        <form
-          className="grid justify-center text-center"
-          onSubmit={handleSubmit(onSubmit)}
-        >
+        <form onSubmit={handleSubmit(onSubmit)}>
           <h1 className="form-header text-2xl">Welcome back!</h1>
           <h1 className="form-header text-xl">Login to your Account</h1>
           <FormEmailComponent register={register} value="loginEmail" />
