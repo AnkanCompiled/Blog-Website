@@ -31,10 +31,3 @@ A feature-rich blogging platform that allows users to create, share, and interac
 - **MySQL**: For relational data management.
 
 ---
-
-## ⚙️ Setup and Installation
-
-### Prerequisites
-- Node.js installed on your machine.
-- MongoDB and MySQL databases running locally or hosted.
-
