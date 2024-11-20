@@ -4,7 +4,7 @@ const { jwtSecret } = require("../config/env");
 const AppError = require("../error/AppError");
 
 const authenticate = (req, res, next) => {
-  const token = req.headers.authorization?.split(" ")[1];
+  const token = req.headers.authorization;
   if (!token) {
     return next(new AppError("Please login to access this route", 401));
   }
@@ -18,16 +18,10 @@ const authenticate = (req, res, next) => {
   });
 };
 
-const tokenCreate = (id) => {
-  const token = jwt.sign(
-    {
-      id: id,
-    },
-    jwtSecret,
-    {
-      expiresIn: "1d",
-    }
-  );
+const tokenCreate = (data) => {
+  const token = jwt.sign(data, jwtSecret, {
+    expiresIn: "1d",
+  });
   return token;
 };
 

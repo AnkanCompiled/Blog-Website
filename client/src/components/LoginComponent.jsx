@@ -5,11 +5,17 @@ import {
   FormPasswordComponent,
 } from "./FormInputComponent";
 import { useForm } from "react-hook-form";
+import { generateOTP, loginUser } from "../api/userApi";
+import { setCookie } from "../util/cookieUtil";
 import GoogleLoginComponent from "./GoogleLoginComponent";
 import Cancel_Icon from "../assets/Cancel_Icon.svg";
+import OTPComponent from "./OTPComponent";
 
 export default function LoginComponent(props) {
   const [isVisible, setVisibility] = useState(false);
+  const [otpVisible, setOTPVisible] = useState(false);
+  const [userEmail, setEmail] = useState("");
+  const [userData, setData] = useState("");
 
   useEffect(() => {
     setVisibility((prev) => !prev);
@@ -18,6 +24,7 @@ export default function LoginComponent(props) {
   const {
     register,
     handleSubmit,
+    setError,
     formState: { errors },
   } = useForm();
 
@@ -25,12 +32,55 @@ export default function LoginComponent(props) {
     setVisibility(false);
   };
 
-  const onSubmit = (data) => {
-    console.log("Form submitted:", data);
+  async function createOTP(email) {
+    await generateOTP(email);
+    return;
+  }
+
+  async function logUser(data) {
+    const result = await loginUser(data);
+    return result;
+  }
+
+  const onSubmit = async (data) => {
+    await createOTP(data.loginEmail);
+    const result = await logUser(data);
+    switch (result) {
+      case 404:
+        setError("loginEmail", {
+          type: "manual",
+          message: "Email does not exists",
+        });
+        break;
+
+      case 401:
+        setError("loginPassword", {
+          type: "manual",
+          message: "Password Incorrect",
+        });
+        break;
+      case 500:
+        setError("loginEmail", {
+          type: "manual",
+          message: "An unexpected error occurred",
+        });
+        break;
+      case undefined:
+        setError("loginEmail", {
+          type: "manual",
+          message: "Server Down",
+        });
+        break;
+      default:
+        setEmail(data.loginEmail);
+        setData(result);
+        setOTPVisible(true);
+    }
   };
 
   return (
     <div className={isVisible ? "form-screen" : "opacity-0 fixed"}>
+      {otpVisible && <OTPComponent userEmail={userEmail} userData={userData} />}
       <div
         className={`form-box ${
           isVisible ? "translate-y-0 opacity-100" : "translate-y-1/4 opacity-0"
@@ -61,7 +111,7 @@ export default function LoginComponent(props) {
           </button>
         </form>
         <hr className="border-t border-gray-400 my-4"></hr>
-        <GoogleLoginComponent />
+        {/* <GoogleLoginComponent /> */}
       </div>
     </div>
   );

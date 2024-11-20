@@ -5,19 +5,19 @@ const connectMongoDB = require("./config/mongoConnect");
 const routes = require("./routes");
 const errorHandler = require("./error/errorHandler");
 const app = express();
+require("dotenv").config();
 
 app.use(cors());
 
 app.use(express.json());
-
-app.use("/assets", express.static(path.join(__dirname, "assets")));
+app.use(express.urlencoded({ extended: true }));
 
 app.use("/api", routes);
 
 app.use(errorHandler);
 
 connectMongoDB().then(() => {
-  app.listen(5000, () => {
-    console.log("Server running on Port 5000");
+  app.listen(process.env.PORT, () => {
+    console.log("Server running at localhost:" + process.env.PORT);
   });
 });
