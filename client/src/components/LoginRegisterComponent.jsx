@@ -3,6 +3,8 @@ import { useForm } from "react-hook-form";
 import VisibilityOnIcon from "../assets/VisibilityOnIcon.svg";
 import VisibilityOffIcon from "../assets/VisibilityOffIcon.svg";
 import LoadingComponent from "./LoadingComponent";
+import { loginApi, registerApi } from "../api/loginApi";
+import { useAuth } from "../context/authContext";
 
 export default function LoginRegisterComponent() {
   const [isLogin, setIsLogin] = useState(false);
@@ -10,21 +12,79 @@ export default function LoginRegisterComponent() {
   const [showConfirmPassword, setShowConfirmPassword] = useState(false);
   const [loading, setLoading] = useState(false);
 
+  const { login } = useAuth();
+
   const {
     register,
     handleSubmit,
+    setError,
     formState: { errors },
   } = useForm();
 
-  const registerUser = async (data) => {};
+  const loginSubmit = async (data) => {
+    console.log("Login Data:", data);
+    const result = await loginApi(data.email, data.password);
+    if (result === 404 || result === 401) {
+      setError("email", {
+        type: "manual",
+        message: (
+          <>
+            The email or password you entered is incorrect.
+            <br />
+            Please try again.
+          </>
+        ),
+      });
+      setError("password", {
+        type: "manual",
+        message: "",
+      });
+      setLoading(false);
+    } else if (result?.token) {
+      setError("success", {
+        type: "manual",
+        message: "Login Successful",
+      });
+      login(result?.token);
+    } else {
+      setError("unknown", {
+        type: "manual",
+        message: "Error occurred please refresh",
+      });
+      setLoading(false);
+    }
+  };
+
+  const registerSubmit = async (data) => {
+    console.log("Register Data:", data);
+    const result = await registerApi(data.email, data.password);
+    if (result === 409) {
+      setError("email", {
+        type: "manual",
+        message: "Email already exist",
+      });
+      setLoading(false);
+    } else if (result?.token) {
+      setError("success", {
+        type: "manual",
+        message: "Registered Successfully",
+      });
+      login(result?.token);
+    } else {
+      setError("unknown", {
+        type: "manual",
+        message: "Error occurred please refresh",
+      });
+      setLoading(false);
+    }
+  };
 
   const onSubmit = async (data) => {
     setLoading(true);
     if (isLogin) {
-      console.log("Login Data:", data);
+      await loginSubmit(data);
     } else {
-      console.log("Register Data:", data);
-      await registerUser(data);
+      await registerSubmit(data);
     }
   };
 
@@ -65,7 +125,18 @@ export default function LoginRegisterComponent() {
           </label>
           <input
             type={showPassword ? "text" : "password"}
-            {...register("password", { required: "Password is required" })}
+            {...register("password", {
+              required: "Password is required",
+              minLength: {
+                value: 6,
+                message: "Password must be at least 6 characters long",
+              },
+              pattern: {
+                value: /^(?=.*[A-Za-z])(?=.*\d)[A-Za-z\d]+$/,
+                message:
+                  "Password must contain at least one letter and one number",
+              },
+            })}
             className={`login_input ${
               errors.password ? "ring-1 ring-red-400" : "ring-0"
             }`}
@@ -92,7 +163,7 @@ export default function LoginRegisterComponent() {
               type={showConfirmPassword ? "text" : "password"}
               {...register("confirmPassword", {
                 validate: (value, data) =>
-                  value === data.password || "Passwords must match",
+                  value === data.password || "Confirm password must match",
               })}
               className={`login_input ${
                 errors.confirmPassword ? "ring-1 ring-red-400" : "ring-0"
@@ -112,16 +183,20 @@ export default function LoginRegisterComponent() {
         )}
         <div>
           {errors.email && (
-            <p className="text-red-400 text-sm mt-1">{errors.email.message}</p>
+            <p className="login_error">{errors.email.message}</p>
           )}
           {errors.password && (
-            <p className="text-red-400 text-sm mt-1">
-              {errors.password.message}
-            </p>
+            <p className="login_error">{errors.password.message}</p>
           )}
           {errors.confirmPassword && (
-            <p className="text-red-400 text-sm mt-1">
-              {errors.confirmPassword.message}
+            <p className="login_error">{errors.confirmPassword.message}</p>
+          )}
+          {errors.unknown && (
+            <p className="login_error">{errors.unknown.message}</p>
+          )}
+          {errors.success && (
+            <p className="text-green-400 text-lg mt-1">
+              {errors.success.message}
             </p>
           )}
         </div>

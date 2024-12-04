@@ -1,16 +1,19 @@
 import React from "react";
 
-export default function LoadingComponent({ sizeProp = 3 }) {
+export default function LoadingComponent({ sizeProp = 1 }) {
   return (
     <div className="w-full gap-x-2 flex justify-center items-center">
       <div
-        className={`w-${sizeProp} h-${sizeProp} bg-blue-200 rounded-full animate-bounce`}
+        style={{ width: `${sizeProp}rem`, height: `${sizeProp}rem` }}
+        className="bg-blue-200 rounded-full animate-bounce"
       ></div>
       <div
-        className={`w-${sizeProp} h-${sizeProp} bg-blue-300 rounded-full animate-bounce`}
+        style={{ width: `${sizeProp}rem`, height: `${sizeProp}rem` }}
+        className="bg-blue-300 rounded-full animate-bounce"
       ></div>
       <div
-        className={`w-${sizeProp} h-${sizeProp} bg-blue-400 rounded-full animate-bounce`}
+        style={{ width: `${sizeProp}rem`, height: `${sizeProp}rem` }}
+        className="bg-blue-400 rounded-full animate-bounce"
       ></div>
     </div>
   );

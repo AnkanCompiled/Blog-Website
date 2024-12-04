@@ -19,7 +19,7 @@ export const AuthProvider = ({ children }) => {
 
   // Log in the user by setting the cookie
   const login = (token) => {
-    setCookie("authToken", token);
+    setCookie("authToken", token, { secure: true });
     setIsAuthenticated(true);
   };
 

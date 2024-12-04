@@ -27,7 +27,7 @@ export default function DarkModeComponent() {
     document.documentElement.classList.toggle("dark", newMode);
     document.documentElement.classList.toggle("light", !newMode);
     setDarkMode(newMode);
-    setCookie("mode", newMode.toString());
+    setCookie("mode", newMode.toString(), { secure: false });
   };
 
   return (

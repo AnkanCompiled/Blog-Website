@@ -21,7 +21,6 @@ export default function LandingPage() {
     setTimeout(() => {
       setAnimateText(true);
     }, 100);
-
     const startTextChangeInterval = () => {
       return setInterval(() => {
         setChangeText(false);

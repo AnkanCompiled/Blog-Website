@@ -3,7 +3,7 @@ import Cookies from "js-cookie";
 export const setCookie = (key, value, options = {}) => {
   const defaultOptions = {
     expires: 7,
-    secure: import.meta.env.VITE_NODE_ENV === "production",
+    secure: import.meta.env.VITE_COOKIE_SECURE === "production",
     sameSite: "Strict",
   };
   Cookies.set(key, value, { ...defaultOptions, ...options });
