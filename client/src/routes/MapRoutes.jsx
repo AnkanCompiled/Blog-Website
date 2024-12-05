@@ -6,6 +6,7 @@ import LandingPage from "../pages/LandingPage";
 import HomePage from "../pages/HomePage";
 import ProfilePage from "../pages/ProfilePage";
 import UploadPage from "../pages/UploadPage";
+import NotFoundPage from "../pages/NotFoundPage";
 
 export default function MapRoutes() {
   return (
@@ -44,6 +45,7 @@ export default function MapRoutes() {
             </ProtectedRoute>
           }
         />
+        <Route path="*" element={<NotFoundPage />} />
       </Routes>
     </Router>
   );

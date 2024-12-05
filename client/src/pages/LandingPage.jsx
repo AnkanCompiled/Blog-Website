@@ -18,6 +18,7 @@ export default function LandingPage() {
   ];
 
   useEffect(() => {
+    document.title = "BloggerNet";
     setTimeout(() => {
       setAnimateText(true);
     }, 100);
@@ -52,7 +53,7 @@ export default function LandingPage() {
   }, []);
 
   return (
-    <div className="bg-gradient-to-r dark:from-gray-900 dark:to-gray-700 from-gray-400 to-gray-100 w-screen flex-1">
+    <div className="bg-gradient-to-r dark:from-gray-900 dark:to-gray-700 from-gray-400 to-gray-100 w-screen h-screen">
       <NavbarComponent />
       <div
         className={`xl:grid xl:grid-cols-2 xl:px-20 ${
