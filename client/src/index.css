@@ -37,7 +37,7 @@
 }
 
 .main_screen {
-  @apply dark:bg-gray-900 bg-gray-200 w-screen h-screen flex-1 flex flex-col;
+  @apply bg-gradient-to-b dark:from-[#111111] dark:to-[#222222] from-gray-300 to-gray-50 w-screen h-screen flex-1 flex flex-col;
 }
 
 .login_input {
@@ -54,4 +54,8 @@
 
 .ql-toolbar {
   @apply dark:bg-gray-400;
+}
+
+.setting_button {
+  @apply text-gray-600 dark:text-gray-400 text-2xl  transition-colors;
 }

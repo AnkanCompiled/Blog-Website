@@ -68,8 +68,8 @@ export default function UploadPage() {
   return (
     <div className="main_screen overflow-x-hidden">
       <NavbarComponent />
-      <div className="flex-1 flex items-center -mt-40 sm:mt-0 justify-center">
-        <div className="bg-gray-200 dark:bg-gray-700 py-4 px-0 sm:px-6 w-screen sm:w-[70vw] md:w-[60vw] xl:w-[40vw] sm:rounded-md shadow-md flex flex-col gap-4">
+      <div className="flex-1 flex items-center justify-center">
+        <div className="bg-gradient-to-b dark:from-gray-700 dark:to-[#333333] from-gray-300 to-gray-100  py-6 px-0 sm:px-6 w-screen sm:w-[70vw] md:w-[60vw] xl:w-[40vw] sm:rounded-md shadow-md flex flex-col gap-4">
           <button className="hover:opacity-80 transition duration-200">
             <img src={preview} className="w-full sm:rounded-md" alt="preview" />
           </button>

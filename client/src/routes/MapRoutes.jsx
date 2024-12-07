@@ -7,6 +7,7 @@ import HomePage from "../pages/HomePage";
 import ProfilePage from "../pages/ProfilePage";
 import UploadPage from "../pages/UploadPage";
 import NotFoundPage from "../pages/NotFoundPage";
+import SettingPage from "../pages/SettingPage";
 
 export default function MapRoutes() {
   return (
@@ -42,6 +43,14 @@ export default function MapRoutes() {
           element={
             <ProtectedRoute>
               <UploadPage />
+            </ProtectedRoute>
+          }
+        />
+        <Route
+          path="/setting"
+          element={
+            <ProtectedRoute>
+              <SettingPage />
             </ProtectedRoute>
           }
         />

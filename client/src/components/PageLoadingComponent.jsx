@@ -1,8 +1,12 @@
 import React from "react";
 
-export default function PageLoadingComponent() {
+export default function PageLoadingComponent({ background = true }) {
   return (
-    <div className="w-screen h-screen flex justify-center items-center dark:bg-gray-900 bg-gray-200">
+    <div
+      className={`flex justify-center items-center ${
+        background ? "dark:bg-gray-900 bg-gray-200 w-screen h-screen" : "h-full"
+      }`}
+    >
       <div className="flex flex-row gap-2">
         <div className="animate-pulse bg-gray-300 dark:bg-gray-600 w-12 h-12 rounded-full"></div>
         <div className="flex flex-col gap-2">
