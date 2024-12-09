@@ -1,24 +1,33 @@
-import React, { useState, lazy, Suspense } from "react";
+import React, { useState, lazy, Suspense, useEffect } from "react";
 import PageLoadingComponent from "../components/PageLoadingComponent";
 import NavbarComponent from "../components/NavbarComponent";
 import FooterComponent from "../components/FooterComponent";
 import AppearanceComponent from "../components/AppearanceComponent";
+import { useNavigate, useParams } from "react-router-dom";
 const AccountComponent = lazy(() => import("../components/AccountComponent"));
 
 export default function SettingPage() {
+  const { componentProp } = useParams();
   const [component, setComponent] = useState("default");
+  const navigate = useNavigate();
+  useEffect(() => {
+    componentProp ? setComponent(componentProp) : setComponent("default");
+  }, [componentProp]);
 
   const renderComponent = () => {
     switch (component) {
       case "account":
+        document.title = "Account";
         return (
           <Suspense fallback={<PageLoadingComponent background={false} />}>
-            <AccountComponent />;
+            <AccountComponent />
           </Suspense>
         );
       case "appearance":
+        document.title = "Appearance";
         return <AppearanceComponent />;
       default:
+        document.title = "Settings";
         return <DefaultComponent />;
     }
   };
@@ -41,7 +50,9 @@ export default function SettingPage() {
                   ? "font-bold"
                   : "hover:text-gray-700 hover:dark:text-gray-300"
               }`}
-              onClick={() => setComponent("account")}
+              onClick={() => {
+                navigate("/setting/account");
+              }}
             >
               Account
             </button>
@@ -51,7 +62,9 @@ export default function SettingPage() {
                   ? "font-bold"
                   : "hover:text-gray-700 hover:dark:text-gray-300"
               }`}
-              onClick={() => setComponent("appearance")}
+              onClick={() => {
+                navigate("/setting/appearance");
+              }}
             >
               Appearance
             </button>
@@ -66,7 +79,7 @@ export default function SettingPage() {
           <div className="w-full flex justify-end mb-3">
             <button
               className="block xl:hidden text-gray-600 hover:text-gray-700 dark:text-gray-400 hover:dark:text-gray-300 transition-colors"
-              onClick={() => setComponent("default")}
+              onClick={() => navigate("/setting")}
             >
               ← Back to Settings
             </button>

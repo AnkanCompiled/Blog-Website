@@ -54,6 +54,14 @@ export default function MapRoutes() {
             </ProtectedRoute>
           }
         />
+        <Route
+          path="/setting/:componentProp"
+          element={
+            <ProtectedRoute>
+              <SettingPage />
+            </ProtectedRoute>
+          }
+        />
         <Route path="*" element={<NotFoundPage />} />
       </Routes>
     </Router>

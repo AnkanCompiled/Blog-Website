@@ -40,6 +40,14 @@ app.all("/users/*", (req, res) => {
   });
 });
 
+app.all("/blog/*", (req, res) => {
+  console.log(`Proxying users request: ${req.method} ${req.originalUrl}`);
+  proxy.web(req, res, {
+    target: BlogService,
+    changeOrigin: true,
+  });
+});
+
 proxy.on("error", (err, req, res) => {
   console.error("Proxy error:", err);
   res.status(500).json({ error: "Proxy error", details: err.message });
