@@ -3,7 +3,7 @@ const URL = import.meta.env.VITE_BACKEND_URL;
 
 export const getUser = async (token) => {
   try {
-    const response = await axios.get(`${URL}/blog/user/data`, {
+    const response = await axios.get(`${URL}/bloggerNet/user/data`, {
       headers: {
         Authorization: `Bearer ${token}`,
         "Content-Type": "application/json",

@@ -72,7 +72,7 @@ export default function SettingPage() {
         </div>
         {/* Main */}
         <div
-          className={` bg-gradient-to-b dark:from-gray-700 dark:to-[#222222] from-gray-400 to-gray-100 m-5 rounded-xl p-10 ${
+          className={` bg-gradient-to-b dark:from-gray-700 dark:to-[#222222] from-gray-400 to-gray-100 m-5 rounded-xl p-4 sm:p-10 ${
             component !== "default" ? "block" : "hidden"
           } xl:block`}
         >

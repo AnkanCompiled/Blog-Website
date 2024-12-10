@@ -36,6 +36,21 @@
   animation: slideUp 0.5s ease-out forwards;
 }
 
+@keyframes slideDown {
+  0% {
+    transform: translateY(-100px);
+    opacity: 0;
+  }
+  100% {
+    transform: translateY(0);
+    opacity: 1;
+  }
+}
+
+.slide-down {
+  animation: slideDown 0.5s ease-out forwards;
+}
+
 .main_screen {
   @apply bg-gradient-to-b dark:from-[#111111] dark:to-[#222222] from-gray-300 to-gray-50 w-screen h-screen flex-1 flex flex-col;
 }

@@ -1,12 +1,8 @@
 import React, { useEffect, useState } from "react";
-import { useNavigate } from "react-router-dom";
-import { useAuth } from "../context/authContext";
 import LoginRegisterComponent from "../components/LoginRegisterComponent";
 import NavbarComponent from "../components/NavbarComponent";
 
 export default function LandingPage() {
-  const { login } = useAuth();
-  const navigate = useNavigate();
   const [animateText, setAnimateText] = useState(false);
   const [textIndex, setTextIndex] = useState(0);
   const [changeText, setChangeText] = useState(true);

@@ -40,7 +40,7 @@ app.all("/users/*", (req, res) => {
   });
 });
 
-app.all("/blog/*", (req, res) => {
+app.all("/bloggerNet/*", (req, res) => {
   console.log(`Proxying users request: ${req.method} ${req.originalUrl}`);
   proxy.web(req, res, {
     target: BlogService,
