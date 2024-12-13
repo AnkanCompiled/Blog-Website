@@ -8,6 +8,7 @@ import ProfilePage from "../pages/ProfilePage";
 import UploadPage from "../pages/UploadPage";
 import NotFoundPage from "../pages/NotFoundPage";
 import SettingPage from "../pages/SettingPage";
+import VerifyPage from "../pages/VerifyPage";
 
 export default function MapRoutes() {
   return (
@@ -62,6 +63,7 @@ export default function MapRoutes() {
             </ProtectedRoute>
           }
         />
+        <Route path="/verify/:token" element={<VerifyPage />} />
         <Route path="*" element={<NotFoundPage />} />
       </Routes>
     </Router>

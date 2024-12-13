@@ -4,6 +4,6 @@ import { authenticate } from "../middleware/tokenMiddleware.js";
 
 const emailRoutes = express.Router();
 
-emailRoutes.post("/verify", authenticate, verifyController);
+emailRoutes.get("/verify", authenticate, verifyController);
 
 export default emailRoutes;

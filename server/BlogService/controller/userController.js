@@ -1,4 +1,4 @@
-import { verifyService } from "../service/userService.js";
+import { createUserService } from "../service/userService.js";
 
 export async function dataController(req, res, next) {
   try {
@@ -7,17 +7,17 @@ export async function dataController(req, res, next) {
       return res.status(200).json({ verified: false, data: data });
     }
 
-    res.status(200).json({ message: "Access granted" });
+    res.status(200).json({ verified: true, data: req.user });
   } catch (error) {
     next(error);
   }
 }
 
-export async function verifyController(req, res, next) {
+export async function createUserController(req, res, next) {
   try {
-    console.log("Token:", req.body?.token);
-    await verifyService(req.body.token);
-    res.status(200).json({ success: "Email verified" });
+    const user = await createUserService(req.body.id);
+    console.log("User:", user);
+    res.status(200).json({ success: "User created" });
   } catch (error) {
     next(error);
   }

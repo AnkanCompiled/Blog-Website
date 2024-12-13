@@ -5,6 +5,7 @@ export async function registerController(req, res, next) {
     console.log("Register Body:", req.body);
     const token = await registerService(req.body);
     res.status(200).json({ token: token });
+    //await verifyService(token, req.body.email);
   } catch (error) {
     next(error);
   }

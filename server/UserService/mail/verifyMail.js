@@ -1,7 +1,7 @@
 import nodemailer from "nodemailer";
 import dotenv from "dotenv";
 dotenv.config();
-import AppError from "../error/AppError";
+import AppError from "../error/AppError.js";
 
 const transporter = nodemailer.createTransport({
   service: "gmail",
