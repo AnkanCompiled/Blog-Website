@@ -3,7 +3,7 @@ import { Schema, model } from "mongoose";
 const userSchema = new Schema(
   {
     userId: { type: Number, required: true, unique: true },
-    username: { type: String },
+    username: { type: String, unique: true, maxLength: 15 },
     profilePicture: { type: String, default: "" },
     bio: { type: String, maxLength: 250, default: "" },
     followers: [{ type: Schema.Types.ObjectId, ref: "User" }],

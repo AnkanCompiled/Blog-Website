@@ -54,3 +54,25 @@ export const verifyUserApi = async (token) => {
     return error?.response?.status;
   }
 };
+
+export const changeUserName = async (token, username) => {
+  try {
+    const response = await axios.post(
+      `${URL}/bloggerNet/user/changeName`,
+      { username: username },
+      {
+        headers: {
+          Authorization: `Bearer ${token}`,
+          "Content-Type": "application/json",
+        },
+      }
+    );
+    return response.status;
+  } catch (error) {
+    console.error(
+      "Error during fetching user:",
+      error.response ? error.response.data : error.message
+    );
+    return error?.response?.status;
+  }
+};
