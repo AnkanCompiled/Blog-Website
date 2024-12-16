@@ -6,9 +6,14 @@ import FooterComponent from "../components/FooterComponent";
 import NoFileWhite from "../assets/NoFileWhite.jpg";
 import NoFileBlack from "../assets/NoFileBlack.jpg";
 import { useMode } from "../context/modeContext";
+import LoadingComponent from "../components/LoadingComponent";
+import CropperComponent from "../components/CropperComponent";
 
 export default function UploadPage() {
   const { isModeDark } = useMode();
+  const inputFileRef = useRef(null);
+  const [cropWindow, setCropWindow] = useState(false);
+  const [src, setSrc] = useState(null);
   const [preview, setPreview] = useState();
   const [loading, setLoading] = useState(false);
   const [errors, setErrors] = useState("");
@@ -51,28 +56,66 @@ export default function UploadPage() {
     setPreviewNull();
   }, [isModeDark]);
 
+  const handleFileChange = (e) => {
+    const file = e.target.files[0];
+    if (file) {
+      const reader = new FileReader();
+      reader.onload = (event) => {
+        setSrc(event.target.result);
+        setCropWindow(true);
+      };
+      reader.readAsDataURL(file);
+    }
+    inputFileRef.current.value = null;
+  };
+
+  const handleCrop = (image) => {
+    setCropWindow(false);
+    setPreview(image);
+  };
+
   const onSubmit = async () => {
     setLoading(true);
     setErrors("");
     const quillContent = quillInstanceRef.current?.getContents();
     if (quillLength < 1) {
       setErrors("Not enough content");
-      setLoading(false);
     } else if (quillLength > 800) {
       setErrors("Content size too large");
-      setLoading(false);
+    } else if (preview === NoFileBlack || preview === NoFileWhite) {
+      setErrors("Provide an image for the blog");
     }
-    console.log("Quill Content:", quillContent);
+    setLoading(false);
   };
 
   return (
     <div className="main_screen overflow-x-hidden">
       <NavbarComponent />
       <div className="flex-1 flex items-center justify-center">
-        <div className="bg-gradient-to-b dark:from-gray-700 dark:to-[#333333] from-gray-300 to-gray-100  py-6 px-0 sm:px-6 w-screen sm:w-[70vw] md:w-[60vw] xl:w-[40vw] sm:rounded-md shadow-md flex flex-col gap-4">
-          <button className="hover:opacity-80 transition duration-200">
-            <img src={preview} className="w-full sm:rounded-md" alt="preview" />
-          </button>
+        <div className=" bg-gradient-to-b dark:from-gray-700 dark:to-[#333333] from-gray-300 to-gray-100  py-6 px-0 sm:px-6 w-screen sm:w-[70vw] md:w-[60vw] xl:w-[40vw] sm:rounded-md shadow-md flex flex-col gap-4">
+          {cropWindow ? (
+            <CropperComponent src={src} handleCrop={handleCrop} />
+          ) : (
+            <button
+              onClick={() => {
+                inputFileRef.current.click();
+              }}
+              className="hover:opacity-70 transition duration-200"
+            >
+              <img
+                src={preview}
+                className="w-full sm:rounded-md"
+                alt="preview"
+              />
+            </button>
+          )}
+
+          <input
+            type="file"
+            onChange={handleFileChange}
+            ref={inputFileRef}
+            hidden
+          />
           <div className="contentDiv" ref={contentRef}></div>
           <div className="grid grid-rows-1 grid-cols-2">
             <div>
@@ -82,14 +125,8 @@ export default function UploadPage() {
               {quillLength}/800
             </p>
           </div>
-
           {loading ? (
-            <button
-              disabled
-              className="py-2 w-full bg-gray-500 font-semibold text-white sm:rounded-lg opacity-50 cursor-not-allowed"
-            >
-              Uploading...
-            </button>
+            <LoadingComponent />
           ) : (
             <button
               onClick={onSubmit}
