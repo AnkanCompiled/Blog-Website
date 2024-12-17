@@ -11,7 +11,7 @@ app.use(cors());
 const Port = process.env.PORT || 3003;
 
 app.use(express.json());
-
+app.use(express.urlencoded({ extended: true }));
 app.use("/bloggerNet", mapRoutes);
 
 app.use(errorHandler);

@@ -19,3 +19,9 @@ export const changeUsernameDb = async (userId, username) => {
   );
   return result;
 };
+
+export const addPostToUser = async (userId, postId) => {
+  const user = await userModel.findOne({ userId: userId });
+  user.posts.push(postId);
+  await user.save();
+};

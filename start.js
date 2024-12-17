@@ -19,7 +19,6 @@ const commands = [
   },
 ];
 
-// Open 4 CMD windows, cd to each path, and run the respective command
 commands.forEach(({ path, command }) => {
   exec(`start cmd /K "cd ${path} && ${command}"`, (error, stdout, stderr) => {
     if (error) {

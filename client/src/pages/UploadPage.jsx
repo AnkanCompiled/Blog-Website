@@ -8,6 +8,8 @@ import NoFileBlack from "../assets/NoFileBlack.jpg";
 import { useMode } from "../context/modeContext";
 import LoadingComponent from "../components/LoadingComponent";
 import CropperComponent from "../components/CropperComponent";
+import { getCookie } from "../util/cookieUtil";
+import { uploadApi } from "../api/uploadApi";
 
 export default function UploadPage() {
   const { isModeDark } = useMode();
@@ -74,6 +76,12 @@ export default function UploadPage() {
     setPreview(image);
   };
 
+  const uploadContent = async (formData) => {
+    const token = getCookie("authToken");
+    const result = await uploadApi(token, formData);
+    return result;
+  };
+
   const onSubmit = async () => {
     setLoading(true);
     setErrors("");
@@ -84,6 +92,12 @@ export default function UploadPage() {
       setErrors("Content size too large");
     } else if (preview === NoFileBlack || preview === NoFileWhite) {
       setErrors("Provide an image for the blog");
+    } else {
+      const formData = new FormData();
+      formData.append("image", preview);
+      formData.append("content", JSON.stringify(quillContent));
+      const result = await uploadContent(formData);
+      console.log(result);
     }
     setLoading(false);
   };

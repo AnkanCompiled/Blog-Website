@@ -7,18 +7,25 @@ const postSchema = new Schema(
       ref: "User",
       required: true,
     },
-    title: { type: String, required: true, maxLength: 200 },
     content: { type: String, required: true },
-    mediaUrl: { type: String },
+    mediaUrl: { type: String, required: true },
     likes: [{ type: Schema.Types.ObjectId, ref: "User" }],
-    comments: [{ type: Schema.Types.ObjectId, ref: "Comment" }],
-    tags: [String],
+    comments: [
+      {
+        type: Schema.Types.ObjectId,
+        ref: "Comment",
+        default: [],
+      },
+    ],
+    tags: {
+      type: [String],
+      default: [],
+    },
     visibility: {
       type: String,
       enum: ["public", "private", "followers"],
       default: "public",
     },
-    location: { type: String },
   },
   { timestamps: true }
 );

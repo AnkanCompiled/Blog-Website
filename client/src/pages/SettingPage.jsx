@@ -39,7 +39,7 @@ export default function SettingPage() {
       <div className="flex-1 grid grid-cols-1 xl:grid-cols-[1fr_5fr]">
         {/* Tab */}
         <div
-          className={`bg-gradient-to-b dark:from-gray-700 dark:to-[#222222] from-gray-400 to-gray-100 m-5 rounded-xl ${
+          className={`bg-gradient-to-b dark:from-gray-700 dark:to-[#222222] from-gray-400 to-gray-200 m-5 rounded-xl ${
             component === "default" ? "block" : "hidden"
           } xl:block`}
         >
@@ -72,7 +72,7 @@ export default function SettingPage() {
         </div>
         {/* Main */}
         <div
-          className={` bg-gradient-to-b dark:from-gray-700 dark:to-[#222222] from-gray-400 to-gray-100 m-5 rounded-xl p-4 sm:p-10 ${
+          className={` bg-gradient-to-b dark:from-gray-700 dark:to-[#222222] from-gray-400 to-gray-200 m-5 rounded-xl p-4 sm:p-10 ${
             component !== "default" ? "block" : "hidden"
           } xl:block`}
         >
