@@ -22,3 +22,21 @@ export const uploadApi = async (token, formData) => {
     return error?.response?.status;
   }
 };
+
+export const fetchPostApi = async (token) => {
+  try {
+    const response = await axios.get(`${URL}/bloggerNet/post`, {
+      headers: {
+        Authorization: `Bearer ${token}`,
+        "Content-Type": "multipart/form-data",
+      },
+    });
+    return response.data;
+  } catch (error) {
+    console.error(
+      "Error during uploading:",
+      error.response ? error.response.data : error.message
+    );
+    return error?.response;
+  }
+};

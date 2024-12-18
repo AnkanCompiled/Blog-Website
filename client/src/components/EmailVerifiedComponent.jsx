@@ -11,7 +11,7 @@ export default function EmailVerifiedComponent({ buttonProp = true }) {
 
   return (
     <div
-      className={`fixed pointer-events-none w-screen left-0 top-0 flex justify-center ${
+      className={`fixed pointer-events-none w-screen left-0 top-0 flex justify-center  ${
         animateWindow ? "slide-down" : "opacity-0"
       }`}
     >
@@ -20,7 +20,7 @@ export default function EmailVerifiedComponent({ buttonProp = true }) {
           Your email is not verified!
         </label>
         {buttonProp && (
-          <NavLink to="/setting/account">
+          <NavLink className={`pointer-events-auto`} to="/setting/account">
             <div className="py-2 px-4 bg-gray-800 text-white rounded-lg hover:bg-gray-900 transition duration-200 cursor-pointer">
               Go Verify
             </div>

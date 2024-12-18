@@ -9,10 +9,13 @@ import { useMode } from "../context/modeContext";
 import LoadingComponent from "../components/LoadingComponent";
 import CropperComponent from "../components/CropperComponent";
 import { getCookie } from "../util/cookieUtil";
-import { uploadApi } from "../api/uploadApi";
+import { uploadApi } from "../api/postApi";
+import { useNavigate } from "react-router-dom";
+import EmailVerifiedComponent from "../components/EmailVerifiedComponent";
 
 export default function UploadPage() {
   const { isModeDark } = useMode();
+  const [verifiedError, setVerifiedError] = useState(false);
   const inputFileRef = useRef(null);
   const [cropWindow, setCropWindow] = useState(false);
   const [src, setSrc] = useState(null);
@@ -21,6 +24,7 @@ export default function UploadPage() {
   const [errors, setErrors] = useState("");
   const [quillLength, setQuillLength] = useState(0);
   const quillInstanceRef = useRef(null);
+  const navigate = useNavigate();
 
   const setPreviewNull = useCallback(() => {
     setPreview(isModeDark ? NoFileBlack : NoFileWhite);
@@ -61,12 +65,18 @@ export default function UploadPage() {
   const handleFileChange = (e) => {
     const file = e.target.files[0];
     if (file) {
-      const reader = new FileReader();
-      reader.onload = (event) => {
-        setSrc(event.target.result);
-        setCropWindow(true);
-      };
-      reader.readAsDataURL(file);
+      const allowedExtensions = ["image/jpeg", "image/png", "image/jpg"];
+      if (allowedExtensions.includes(file.type)) {
+        setErrors("");
+        const reader = new FileReader();
+        reader.onload = (event) => {
+          setSrc(event.target.result);
+          setCropWindow(true);
+        };
+        reader.readAsDataURL(file);
+      } else {
+        setErrors("Image should be of type jpg, jpeg, png");
+      }
     }
     inputFileRef.current.value = null;
   };
@@ -88,7 +98,7 @@ export default function UploadPage() {
     const quillContent = quillInstanceRef.current?.getContents();
     if (quillLength < 1) {
       setErrors("Not enough content");
-    } else if (quillLength > 800) {
+    } else if (quillLength > 2000) {
       setErrors("Content size too large");
     } else if (preview === NoFileBlack || preview === NoFileWhite) {
       setErrors("Provide an image for the blog");
@@ -97,13 +107,26 @@ export default function UploadPage() {
       formData.append("image", preview);
       formData.append("content", JSON.stringify(quillContent));
       const result = await uploadContent(formData);
-      console.log(result);
+      switch (result) {
+        case 200:
+          navigate("/home");
+          break;
+        case 400:
+          setErrors("Image size too large");
+          break;
+        case 401:
+          setVerifiedError(true);
+          break;
+        default:
+          setErrors("Unexpected error occurred! Please try again.");
+      }
     }
     setLoading(false);
   };
 
   return (
     <div className="main_screen overflow-x-hidden">
+      {verifiedError && <EmailVerifiedComponent />}
       <NavbarComponent />
       <div className="flex-1 flex items-center justify-center">
         <div className=" bg-gradient-to-b dark:from-gray-700 dark:to-[#333333] from-gray-300 to-gray-100  py-6 px-0 sm:px-6 w-screen sm:w-[70vw] md:w-[60vw] xl:w-[40vw] sm:rounded-md shadow-md flex flex-col gap-4">
@@ -136,7 +159,7 @@ export default function UploadPage() {
               {errors && <p className="text-red-400 text-md">{errors}</p>}
             </div>
             <p className="text-right text-gray-600 dark:text-gray-400 px-2">
-              {quillLength}/800
+              {quillLength}/2000
             </p>
           </div>
           {loading ? (

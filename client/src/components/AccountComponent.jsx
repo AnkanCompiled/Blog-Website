@@ -188,7 +188,7 @@ export default function AccountComponent() {
           </div>
         )}
 
-        <div className="flex-1 flex items-end justify-center my-10">
+        <div className="flex justify-center my-10">
           <button
             onClick={handleLogoutButton}
             className="py-2 px-8 lg:px-20 w-full sm:w-[20vw] bg-red-800 text-white font-bold rounded-md shadow-xl hover:bg-red-900 transition duration-200"

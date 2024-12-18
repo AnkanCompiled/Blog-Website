@@ -8,7 +8,7 @@ export default function App() {
     <>
       <ModeProvider>
         <AuthProvider>
-            <MapRoutes />
+          <MapRoutes />
         </AuthProvider>
       </ModeProvider>
     </>

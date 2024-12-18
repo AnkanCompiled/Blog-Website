@@ -6,7 +6,7 @@ import {
 
 export async function dataController(req, res, next) {
   try {
-    const data = await dataService(req.user.id);
+    const data = await dataService(req.user?.id);
     if (!data) {
       return res.status(200).json({ verified: false, id: req.user.id });
     }
