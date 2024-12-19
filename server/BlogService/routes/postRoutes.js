@@ -11,7 +11,7 @@ const postRoutes = express.Router();
 
 postRoutes.get("/", authenticate, fetchController);
 
-postRoutes.get("/image", postImageController);
+postRoutes.get("/image/:imageName", postImageController);
 
 postRoutes.post(
   "/upload",

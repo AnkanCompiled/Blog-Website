@@ -5,6 +5,11 @@ export const searchUserByIdDb = async (userId) => {
   return result;
 };
 
+export const searchUserByMongoIdDb = async (id) => {
+  const result = await userModel.findOne({ _id: id });
+  return result;
+};
+
 export const createUserDb = async (data) => {
   const newUser = new userModel(data);
   const result = await newUser.save();

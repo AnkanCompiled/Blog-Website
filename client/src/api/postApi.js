@@ -34,7 +34,20 @@ export const fetchPostApi = async (token) => {
     return response.data;
   } catch (error) {
     console.error(
-      "Error during uploading:",
+      "Error during fetching posts:",
+      error.response ? error.response.data : error.message
+    );
+    return error?.response;
+  }
+};
+
+export const fetchPostImageApi = async (image) => {
+  try {
+    const response = await axios.get(`${URL}/bloggerNet/post/image/${image}`);
+    return response.data;
+  } catch (error) {
+    console.error(
+      "Error during fetching image:",
       error.response ? error.response.data : error.message
     );
     return error?.response;

@@ -5,6 +5,7 @@ import {
   postImageService,
 } from "../service/postService.js";
 import { searchUserByIdDb } from "../db/userDb.js";
+import path from "path";
 
 export async function uploadController(req, res, next) {
   try {
@@ -32,7 +33,7 @@ export async function fetchController(req, res, next) {
     const data = user
       ? await fetchService(user.following, user.interests)
       : await fetchService();
-    res.status(200).json({ posts: data });
+    res.status(200).json(data);
   } catch (error) {
     next(error);
   }
@@ -40,8 +41,9 @@ export async function fetchController(req, res, next) {
 
 export async function postImageController(req, res, next) {
   try {
-    const imagePath = await postImageService(req.header.image);
-    res.status(200).sendFile(imagePath);
+    const imagePath = await postImageService(req.params.imageName);
+    const absolutePath = path.resolve(imagePath);
+    res.status(200).sendFile(absolutePath);
   } catch (error) {
     next(error);
   }

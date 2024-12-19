@@ -1,9 +1,9 @@
 import { fetchDb, uploadDb } from "../db/postDb.js";
-import { addPostToUser } from "../db/userDb.js";
+import { addPostToUser, searchUserByMongoIdDb } from "../db/userDb.js";
 import AppError from "../error/AppError.js";
 import redisClient from "../config/redisConfig.js";
 import path from "path";
-import fs from "fs";
+import fs from "fs/promises";
 
 export async function uploadService(userData, content, fileName) {
   try {
@@ -35,34 +35,48 @@ export async function fetchService(
 ) {
   const selectedPosts = [];
   const selectedPostIds = new Set();
+
   try {
     const recentPosts = await fetchDb(skip, limit);
 
-    const addPost = (post) => {
+    const addPost = async (post) => {
       if (!selectedPostIds.has(post._id.toString())) {
-        selectedPosts.push(post);
+        const { username, profilePicture } = await searchUserByMongoIdDb(
+          post.author
+        );
+        selectedPosts.push({
+          post: post,
+          username: username,
+          profilePicture: profilePicture,
+        });
         selectedPostIds.add(post._id.toString());
       }
     };
 
+    // Process posts based on `following`
     if (following) {
-      recentPosts.forEach((post) => {
+      for (const post of recentPosts) {
         if (following.includes(post.author._id)) {
-          addPost(post);
+          await addPost(post);
         }
-      });
+      }
     }
 
+    // Process posts based on `interests`
     if (interests) {
-      recentPosts.forEach((post) => {
+      for (const post of recentPosts) {
         if (post.tags.some((tag) => interests.includes(tag))) {
-          addPost(post);
+          await addPost(post);
         }
-      });
+      }
     }
-    recentPosts.forEach((post) => {
-      addPost(post);
-    });
+
+    // Process remaining posts
+    for (const post of recentPosts) {
+      await addPost(post);
+    }
+
+    console.log(selectedPosts);
 
     return selectedPosts;
   } catch (error) {
@@ -73,11 +87,11 @@ export async function fetchService(
 
 export async function postImageService(imageName) {
   try {
-    const imagePath = path.join(__dirname, "../uploads/", imageName);
-    fs.access(imagePath);
+    const imagePath = path.join(process.cwd(), "uploads", imageName);
+    await fs.access(imagePath);
     return imagePath;
   } catch (error) {
     console.error("Error fetching image:", error);
-    throw new AppError(error.message, error.statusCode || 500);
+    throw new AppError(error.message, error.statusCode || 404);
   }
 }

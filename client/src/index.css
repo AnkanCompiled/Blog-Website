@@ -4,17 +4,21 @@
 @tailwind components;
 @tailwind utilities;
 
+html {
+  overflow-x: hidden;
+}
+
 ::-webkit-scrollbar {
   width: 8px;
   height: 8px;
 }
 
 ::-webkit-scrollbar-track {
-  @apply bg-gray-400 rounded-lg;
+  @apply bg-gray-400;
 }
 
 ::-webkit-scrollbar-thumb {
-  @apply bg-gray-600 rounded-lg;
+  @apply bg-gray-600;
 }
 
 ::-webkit-scrollbar-thumb:hover {
@@ -64,13 +68,29 @@
 }
 
 .contentDiv {
-  @apply rounded-md dark:text-gray-100 text-gray-800;
+  @apply rounded-md bg-gray-300 dark:bg-[#444444] dark:text-gray-100 text-gray-800;
 }
 
 .ql-toolbar {
   @apply dark:bg-gray-400;
 }
 
+.ql-snow {
+  @apply border-[0px];
+}
+
 .setting_button {
   @apply text-gray-600 dark:text-gray-400 text-2xl  transition-colors;
+}
+
+.ql-container {
+  border: none !important;
+}
+
+.ql-toolbar {
+  border: none !important;
+}
+
+.ql-editor {
+  border: none !important;
 }
