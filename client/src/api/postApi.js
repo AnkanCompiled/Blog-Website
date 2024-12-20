@@ -53,3 +53,28 @@ export const fetchPostImageApi = async (image) => {
     return error?.response;
   }
 };
+
+export const likePostApi = async (token, postId, value) => {
+  try {
+    const response = await axios.post(
+      `${URL}/bloggerNet/post/likes`,
+      {
+        postId: postId,
+        value: value,
+      },
+      {
+        headers: {
+          Authorization: `Bearer ${token}`,
+          "Content-Type": "application/json",
+        },
+      }
+    );
+    return response.data;
+  } catch (error) {
+    console.error(
+      "Error during fetching image:",
+      error.response ? error.response.data : error.message
+    );
+    return error?.response;
+  }
+};

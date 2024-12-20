@@ -1,4 +1,5 @@
 import postModel from "../model/postModel.js";
+import mongoose from "mongoose";
 
 export const uploadDb = async (data) => {
   const newPost = new postModel(data);
@@ -13,4 +14,11 @@ export const fetchDb = async (skip, limit) => {
     .skip(skip)
     .limit(limit);
   return result;
+};
+
+export const likeDb = async (userId, postId, value) => {
+  const update = value
+    ? { $addToSet: { likes: userId } }
+    : { $pull: { likes: userId } };
+  await postModel.findByIdAndUpdate(postId, update);
 };

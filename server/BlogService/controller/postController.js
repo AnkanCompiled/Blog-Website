@@ -3,6 +3,7 @@ import {
   fetchService,
   uploadService,
   postImageService,
+  likesService,
 } from "../service/postService.js";
 import { searchUserByIdDb } from "../db/userDb.js";
 import path from "path";
@@ -19,7 +20,6 @@ export async function uploadController(req, res, next) {
     await uploadService(user, content, filename);
     res.status(200).json({
       message: "File uploaded successfully!",
-      content: content,
       image: filename,
     });
   } catch (error) {
@@ -31,8 +31,17 @@ export async function fetchController(req, res, next) {
   try {
     const user = await searchUserByIdDb(req.user.id);
     const data = user
-      ? await fetchService(user.following, user.interests)
-      : await fetchService();
+      ? await fetchService(
+          user._id,
+          user.following,
+          user.interests,
+          req.body.skip,
+          req.body.limit
+        )
+      : await fetchService(
+          (skip = req.header.skip),
+          (limit = req.header.limit)
+        );
     res.status(200).json(data);
   } catch (error) {
     next(error);
@@ -44,6 +53,16 @@ export async function postImageController(req, res, next) {
     const imagePath = await postImageService(req.params.imageName);
     const absolutePath = path.resolve(imagePath);
     res.status(200).sendFile(absolutePath);
+  } catch (error) {
+    next(error);
+  }
+}
+
+export async function likesController(req, res, next) {
+  try {
+    const { _id } = await searchUserByIdDb(req.user.id);
+    await likesService(_id, req.body.postId, req.body.value);
+    res.status(200).json({ message: "Liked or Un-liked post successfully" });
   } catch (error) {
     next(error);
   }

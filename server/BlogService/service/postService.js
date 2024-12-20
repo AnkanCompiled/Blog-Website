@@ -1,4 +1,4 @@
-import { fetchDb, uploadDb } from "../db/postDb.js";
+import { fetchDb, uploadDb, likeDb } from "../db/postDb.js";
 import { addPostToUser, searchUserByMongoIdDb } from "../db/userDb.js";
 import AppError from "../error/AppError.js";
 import redisClient from "../config/redisConfig.js";
@@ -28,10 +28,11 @@ export async function uploadService(userData, content, fileName) {
 }
 
 export async function fetchService(
+  id,
   following = "",
   interests = "",
   skip = 0,
-  limit = 10
+  limit = 5
 ) {
   const selectedPosts = [];
   const selectedPostIds = new Set();
@@ -48,6 +49,7 @@ export async function fetchService(
           post: post,
           username: username,
           profilePicture: profilePicture,
+          liked: post.likes.includes(id),
         });
         selectedPostIds.add(post._id.toString());
       }
@@ -76,8 +78,6 @@ export async function fetchService(
       await addPost(post);
     }
 
-    console.log(selectedPosts);
-
     return selectedPosts;
   } catch (error) {
     console.error("Error fetching post:", error);
@@ -93,5 +93,14 @@ export async function postImageService(imageName) {
   } catch (error) {
     console.error("Error fetching image:", error);
     throw new AppError(error.message, error.statusCode || 404);
+  }
+}
+
+export async function likesService(userId, postId, value) {
+  try {
+    await likeDb(userId, postId, value);
+  } catch (error) {
+    console.error("Error liking post:", error);
+    throw new AppError(error.message, error.statusCode || 500);
   }
 }
