@@ -12,7 +12,7 @@ import { useAuth } from "../context/authContext";
 import PageLoadingComponent from "./PageLoadingComponent";
 
 export default function AccountComponent() {
-  const { logout } = useAuth();
+  const { logout, verifiedError, userDetails } = useAuth();
 
   const {
     register,
@@ -23,26 +23,9 @@ export default function AccountComponent() {
 
   const [loading, setLoading] = useState(false);
   const [pageLoading, setPageLoading] = useState(false);
-  const [userDetails, setUserDetails] = useState({});
-  const [verifiedError, setVerifiedError] = useState(false);
   const [verifyText, setVerifyText] = useState("");
   const [changeUsernameVisibility, setChangeUsernameVisibility] =
     useState(false);
-
-  const userInfo = async () => {
-    const token = getCookie("authToken");
-    setPageLoading(true);
-    const result = await getUserApi(token);
-    setUserDetails(result);
-    setPageLoading(false);
-    if (!result?.verified) {
-      setVerifiedError(true);
-    }
-  };
-
-  useEffect(() => {
-    userInfo();
-  }, []);
 
   const handleLogoutButton = async (event) => {
     logout();
@@ -139,7 +122,7 @@ export default function AccountComponent() {
     );
   }
 
-  return pageLoading ? (
+  return !userDetails ? (
     <PageLoadingComponent background={false} />
   ) : (
     <>

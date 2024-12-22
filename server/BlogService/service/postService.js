@@ -1,7 +1,6 @@
-import { fetchDb, uploadDb, likeDb } from "../db/postDb.js";
-import { addPostToUser, searchUserByMongoIdDb } from "../db/userDb.js";
+import { fetchPostDb, uploadDb, likeDb } from "../db/postDb.js";
+import { addPostToUser } from "../db/userDb.js";
 import AppError from "../error/AppError.js";
-import redisClient from "../config/redisConfig.js";
 import path from "path";
 import fs from "fs/promises";
 
@@ -14,13 +13,6 @@ export async function uploadService(userData, content, fileName) {
     };
     const post = await uploadDb(newPost);
     await addPostToUser(userData.userId, post._id);
-    await redisClient.set(
-      `postCache:${post._id}`,
-      JSON.stringify({ post: post, username: userData.username }),
-      {
-        EX: 7200,
-      }
-    );
   } catch (error) {
     console.error("Error uploading:", error);
     throw new AppError(error.message, error.statusCode || 500);
@@ -28,7 +20,7 @@ export async function uploadService(userData, content, fileName) {
 }
 
 export async function fetchService(
-  id,
+  id = "",
   following = "",
   interests = "",
   skip = 0,
@@ -38,19 +30,14 @@ export async function fetchService(
   const selectedPostIds = new Set();
 
   try {
-    const recentPosts = await fetchDb(skip, limit);
+    const recentPosts = await fetchPostDb(skip, limit);
 
     const addPost = async (post) => {
       if (!selectedPostIds.has(post._id.toString())) {
-        const { username, profilePicture } = await searchUserByMongoIdDb(
-          post.author
-        );
-        selectedPosts.push({
-          post: post,
-          username: username,
-          profilePicture: profilePicture,
-          liked: post.likes.includes(id),
-        });
+        const liked = id
+          ? post.likes.some((likeId) => likeId.equals(id))
+          : false;
+        selectedPosts.push({ ...post, liked: liked });
         selectedPostIds.add(post._id.toString());
       }
     };
@@ -98,6 +85,7 @@ export async function postImageService(imageName) {
 
 export async function likesService(userId, postId, value) {
   try {
+    console.log("Liked", userId, postId, value);
     await likeDb(userId, postId, value);
   } catch (error) {
     console.error("Error liking post:", error);

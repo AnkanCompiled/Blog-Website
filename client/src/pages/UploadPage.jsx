@@ -12,10 +12,11 @@ import { getCookie } from "../util/cookieUtil";
 import { uploadApi } from "../api/postApi";
 import { useNavigate } from "react-router-dom";
 import EmailVerifiedComponent from "../components/EmailVerifiedComponent";
+import { useAuth } from "../context/authContext";
 
 export default function UploadPage() {
   const { isModeDark } = useMode();
-  const [verifiedError, setVerifiedError] = useState(false);
+  const { verifiedError } = useAuth();
   const inputFileRef = useRef(null);
   const [cropWindow, setCropWindow] = useState(false);
   const [src, setSrc] = useState(null);
@@ -114,9 +115,6 @@ export default function UploadPage() {
         case 400:
           setErrors("Image size too large");
           break;
-        case 401:
-          setVerifiedError(true);
-          break;
         default:
           setErrors("Unexpected error occurred! Please try again.");
       }
@@ -166,8 +164,9 @@ export default function UploadPage() {
             <LoadingComponent />
           ) : (
             <button
+              disabled={verifiedError}
               onClick={onSubmit}
-              className="py-2 w-full bg-gray-800 font-semibold text-white sm:rounded-lg hover:bg-gray-900 transition duration-200"
+              className="py-2 w-full bg-gray-800 font-semibold text-white sm:rounded-lg hover:bg-gray-900 transition duration-200 disabled:opacity-10 disabled:hover:bg-gray-800"
             >
               Upload
             </button>

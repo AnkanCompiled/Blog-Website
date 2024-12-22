@@ -11,14 +11,7 @@ const MediaService = process.env.MediaService;
 const BlogService = process.env.BlogService;
 const proxy = httpProxy.createProxyServer();
 
-const whitelist = [
-  "http://localhost:5173",
-  UserService,
-  MediaService,
-  BlogService,
-];
-
-console.log(whitelist);
+const whitelist = [UserService, MediaService, BlogService];
 
 const corsOptions = {
   origin: (origin, callback) => {

@@ -11,6 +11,9 @@ export default {
         oswald: ["Oswald", "sans-serif"],
         pattaya: ["Pattaya", "sans-serif"],
       },
+      gridTemplateColumns: {
+        "min-max-min": "minmax(0px, 1fr) minmax(200px, 2fr) minmax(0px, 1fr)",
+      },
     },
   },
   plugins: [require("@tailwindcss/forms")],

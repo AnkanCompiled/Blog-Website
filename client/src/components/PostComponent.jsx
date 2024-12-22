@@ -6,12 +6,15 @@ import Comment_Black from "../assets/Comment_Black.svg";
 import Comment_White from "../assets/Comment_White.svg";
 import Bookmark_Black from "../assets/Bookmark_Black.svg";
 import Bookmark_White from "../assets/Bookmark_White.svg";
+import { formatDistanceToNow } from "date-fns";
 import { useMode } from "../context/modeContext";
 import LikeComponent from "./LikeComponent";
+import CommentComponent from "./CommentComponent";
 const URL = import.meta.env.VITE_BACKEND_URL;
 
 export default function PostComponent({ value }) {
   const { isModeDark } = useMode();
+  const [showComments, setShowComments] = useState(false);
   const [showFullContent, setShowFullContent] = useState([]);
 
   function extractFirstLine(deltaData) {
@@ -25,6 +28,10 @@ export default function PostComponent({ value }) {
     return firstLine;
   }
 
+  const handleComments = () => {
+    setShowComments((prev) => !prev);
+  };
+
   const toggleContent = (id) => {
     setShowFullContent((prev) => ({
       ...prev,
@@ -34,50 +41,62 @@ export default function PostComponent({ value }) {
 
   return (
     <>
+      {showComments && (
+        <CommentComponent value={value} handleComments={handleComments} />
+      )}
       <div className="flex gap-2">
         <img
           src={
             value?.profilePicture
-              ? `${URL}/bloggerNet/post/image/${value?.profilePicture}`
+              ? `${URL}/bloggerNet/post/image/${value?.author?.profilePicture}`
               : isModeDark
               ? Profile_White
               : Profile_Black
           }
-          alt={`Profile image for ${value?.username}`}
+          alt={`Profile image for ${value?.author?.username}`}
           className="p-[2px] h-8 w-8 rounded-full object-cover"
         />
-        <p className="bold text-xl opacity-80">{value?.username}</p>
+        <p className="bold text-xl opacity-80">{value?.author?.username}</p>
+        <p className="flex justify-center items-end h-full text-sm opacity-50">
+          {formatDistanceToNow(new Date(value?.createdAt), {
+            addSuffix: true,
+          })}
+        </p>
       </div>
       <img
-        src={`${URL}/bloggerNet/post/image/${value?.post?.mediaUrl}`}
-        alt={`Post image for ${value?.post?._id}`}
+        src={`${URL}/bloggerNet/post/image/${value?.mediaUrl}`}
+        alt={`Post image for ${value?._id}`}
         className="w-full h-auto object-cover"
       />
       <div className="p-2 h-full flex flex-col border-b-2 border-[#f0f0f0] dark:border-[#222222]">
-        {showFullContent[value?.post?._id] ? (
-          <DisplayQuillContent deltaData={JSON.parse(value?.post?.content)} />
+        {showFullContent[value?._id] ? (
+          <DisplayQuillContent deltaData={JSON.parse(value?.content)} />
         ) : (
           <p className="text-xl font-bold">
-            {extractFirstLine(JSON.parse(value?.post?.content))}
+            {extractFirstLine(JSON.parse(value?.content))}
           </p>
         )}
         <div>
           <button
-            onClick={() => toggleContent(value?.post?._id)}
+            onClick={() => toggleContent(value?._id)}
             className=" text-blue-500 hover:text-blue-600 my-3"
           >
-            {showFullContent[value?.post?._id] ? "Show Less" : "Read More"}
+            {showFullContent[value?._id] ? "Show Less" : "Read More"}
           </button>
         </div>
         <div className="grid grid-cols-2 w-full">
           <div className="flex gap-4">
             <LikeComponent value={value} />
-            <button className="hover:scale-105 duration-300">
+            <button
+              className="flex items-center gap-1 hover:scale-105 duration-300 focus:scale-110"
+              onClick={handleComments}
+            >
               <img
                 src={isModeDark ? Comment_White : Comment_Black}
                 alt={`Like`}
                 className="h-8 w-8 object-cover"
               />
+              <p className="text-md">{value?.comments.length}</p>
             </button>
           </div>
           <div className="flex justify-end">
