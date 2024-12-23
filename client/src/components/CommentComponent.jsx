@@ -18,12 +18,13 @@ import { useAuth } from "../context/authContext";
 
 export default function CommentComponent({ value, handleComments }) {
   const { isModeDark } = useMode();
-  const { verifiedError, notVerified } = useAuth();
+  const { notVerified } = useAuth();
   const hasFetched = useRef(false);
   const [boxAnimate, setBoxAnimate] = useState(undefined);
   const [commentData, setCommentData] = useState([]);
   const [loading, setLoading] = useState(false);
   const [newComment, setNewComment] = useState("");
+  const [isReply, setIsReply] = useState(false);
 
   const getComments = async () => {
     setLoading(true);
@@ -107,8 +108,10 @@ export default function CommentComponent({ value, handleComments }) {
                     />
                     <div className="flex-1">
                       <div className="flex gap-1">
-                        <p className="text-sm">{item?.user?.username}</p>
-                        <p className="text-sm opacity-50">
+                        <p className="text-sm font-semibold">
+                          {item?.user?.username}
+                        </p>
+                        <p className="text-xs opacity-40 flex items-center">
                           {formatDistanceToNow(new Date(item?.createdAt), {
                             addSuffix: true,
                           })}

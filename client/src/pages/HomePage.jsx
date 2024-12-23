@@ -38,7 +38,7 @@ export default function HomePage() {
         <NavbarComponent />
       </div>
       <div className="h-16 ">{verifiedError && <EmailVerifiedComponent />}</div>
-      <div className="grid xl:grid-cols-2 justify-items-center gap-y-4 xl:gap-y-10">
+      <div className="grid justify-items-center gap-y-4">
         {postData.length > 0 ? (
           postData.map((value) => (
             <div key={value?._id}>

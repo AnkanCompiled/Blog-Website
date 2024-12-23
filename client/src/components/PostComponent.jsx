@@ -44,7 +44,7 @@ export default function PostComponent({ value }) {
       {showComments && (
         <CommentComponent value={value} handleComments={handleComments} />
       )}
-      <div className="flex gap-2">
+      <div className="flex flex-row gap-2">
         <img
           src={
             value?.profilePicture
@@ -57,7 +57,7 @@ export default function PostComponent({ value }) {
           className="p-[2px] h-8 w-8 rounded-full object-cover"
         />
         <p className="bold text-xl opacity-80">{value?.author?.username}</p>
-        <p className="flex justify-center items-end h-full text-sm opacity-50">
+        <p className="text-xs opacity-50 flex items-center">
           {formatDistanceToNow(new Date(value?.createdAt), {
             addSuffix: true,
           })}

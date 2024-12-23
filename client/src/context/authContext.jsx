@@ -18,7 +18,7 @@ export const AuthProvider = ({ children }) => {
   const userInfo = async (token) => {
     if (!token) return;
     const result = await getUserApi(token);
-    getUser(result);
+    setUserDetails(result);
     if (!result?.verified) {
       setVerifiedError(true);
     } else {
@@ -44,10 +44,6 @@ export const AuthProvider = ({ children }) => {
     setVerifiedError(true);
   };
 
-  const getUser = (data) => {
-    setUserDetails(data);
-  };
-
   const login = (token) => {
     setCookie("authToken", token, { secure: true });
     setIsAuthenticated(true);
@@ -70,7 +66,7 @@ export const AuthProvider = ({ children }) => {
         verifiedError,
         notVerified,
         userDetails,
-        getUser,
+        userInfo,
       }}
     >
       {!isLoading ? children : <PageLoadingComponent />}

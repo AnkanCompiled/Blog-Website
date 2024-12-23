@@ -1,10 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
-import {
-  changeUserName,
-  getUserApi,
-  verifySendEmailApi,
-} from "../api/accountApi";
+import { changeUserName, verifySendEmailApi } from "../api/accountApi";
 import { getCookie } from "../util/cookieUtil";
 import EmailVerifiedComponent from "./EmailVerifiedComponent";
 import LoadingComponent from "./LoadingComponent";
@@ -12,7 +8,7 @@ import { useAuth } from "../context/authContext";
 import PageLoadingComponent from "./PageLoadingComponent";
 
 export default function AccountComponent() {
-  const { logout, verifiedError, userDetails } = useAuth();
+  const { logout, verifiedError, userDetails, userInfo } = useAuth();
 
   const {
     register,
@@ -22,7 +18,6 @@ export default function AccountComponent() {
   } = useForm();
 
   const [loading, setLoading] = useState(false);
-  const [pageLoading, setPageLoading] = useState(false);
   const [verifyText, setVerifyText] = useState("");
   const [changeUsernameVisibility, setChangeUsernameVisibility] =
     useState(false);
@@ -37,7 +32,6 @@ export default function AccountComponent() {
     const result = await verifySendEmailApi(token);
     console.log(result);
     setLoading(false);
-    console.log(result);
     switch (result) {
       case 200:
         setVerifyText(
@@ -55,7 +49,7 @@ export default function AccountComponent() {
     const result = await changeUserName(token, data.newUsername);
     switch (result) {
       case 200:
-        await userInfo();
+        await userInfo(token);
         setChangeUsernameVisibility(false);
         break;
       case 409:

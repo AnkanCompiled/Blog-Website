@@ -1,5 +1,4 @@
 import postModel from "../model/postModel.js";
-import commentModel from "../model/commentModel.js";
 
 export const uploadDb = async (data) => {
   const newPost = new postModel(data);
