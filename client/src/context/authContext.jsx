@@ -18,11 +18,13 @@ export const AuthProvider = ({ children }) => {
   const userInfo = async (token) => {
     if (!token) return;
     const result = await getUserApi(token);
-    setUserDetails(result);
+    console.log("result", result);
     if (!result?.verified) {
       setVerifiedError(true);
+      setUserDetails(result);
     } else {
       setVerifiedError(false);
+      setUserDetails(result?.data);
     }
   };
 

@@ -117,7 +117,7 @@ export default function AccountComponent() {
   }
 
   return !userDetails ? (
-    <PageLoadingComponent background={false} />
+    <PageLoadingComponent background={false} screen={false} />
   ) : (
     <>
       {verifiedError && (
@@ -148,7 +148,7 @@ export default function AccountComponent() {
           Username:
           {verifiedError
             ? ` Guest_${userDetails?.id}`
-            : ` ${userDetails?.data?.username}`}
+            : ` ${userDetails?.username}`}
         </h3>
         {!verifiedError && (
           <div className="lg:flex justify-start">

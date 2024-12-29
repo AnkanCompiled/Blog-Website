@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, lazy, Suspense } from "react";
 import DisplayQuillContent from "../components/DisplayQuillComponent";
 import Profile_Black from "../assets/Profile_Black.svg";
 import Profile_White from "../assets/Profile_White.svg";
@@ -9,7 +9,8 @@ import Bookmark_White from "../assets/Bookmark_White.svg";
 import { formatDistanceToNow } from "date-fns";
 import { useMode } from "../context/modeContext";
 import LikeComponent from "./LikeComponent";
-import CommentComponent from "./CommentComponent";
+import PageLoadingComponent from "./PageLoadingComponent";
+const CommentComponent = lazy(() => import("./CommentComponent"));
 const URL = import.meta.env.VITE_BACKEND_URL;
 
 export default function PostComponent({ value }) {
@@ -42,7 +43,9 @@ export default function PostComponent({ value }) {
   return (
     <>
       {showComments && (
-        <CommentComponent value={value} handleComments={handleComments} />
+        <Suspense fallback={<PageLoadingComponent background={false} />}>
+          <CommentComponent value={value} handleComments={handleComments} />
+        </Suspense>
       )}
       <div className="flex flex-row gap-2">
         <img

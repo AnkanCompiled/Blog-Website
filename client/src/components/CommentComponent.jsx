@@ -1,5 +1,4 @@
 import React, { useEffect, useRef, useState } from "react";
-import EmailVerifiedComponent from "./EmailVerifiedComponent";
 import Cross_Black from "../assets/Cross_Black.svg";
 import Cross_White from "../assets/Cross_White.svg";
 import Like_Black from "../assets/Like_Black.svg";
@@ -10,26 +9,32 @@ import Profile_White from "../assets/Profile_White.svg";
 import Send_Black from "../assets/Send_Black.svg";
 import Send_White from "../assets/Send_White.svg";
 import { useMode } from "../context/modeContext";
-import { getCookie } from "../util/cookieUtil";
 import { formatDistanceToNow } from "date-fns";
-import { fetchCommentsApi, uploadCommentApi } from "../api/postApi";
+import {
+  fetchCommentsApi,
+  likeCommentApi,
+  uploadCommentApi,
+} from "../api/commentApi";
 import PageLoadingComponent from "./PageLoadingComponent";
+import NumberFormatter from "./NumberFormatter";
 import { useAuth } from "../context/authContext";
 
 export default function CommentComponent({ value, handleComments }) {
   const { isModeDark } = useMode();
-  const { notVerified } = useAuth();
+  const { userDetails } = useAuth();
   const hasFetched = useRef(false);
   const [boxAnimate, setBoxAnimate] = useState(undefined);
+  const [replyAnimate, setReplyAnimate] = useState(undefined);
   const [commentData, setCommentData] = useState([]);
   const [loading, setLoading] = useState(false);
   const [newComment, setNewComment] = useState("");
   const [isReply, setIsReply] = useState(false);
+  const [replyTo, setReplyTo] = useState("");
 
   const getComments = async () => {
     setLoading(true);
-    const token = getCookie("authToken");
-    const result = (await fetchCommentsApi(token, value?._id)) || [];
+    const result = (await fetchCommentsApi(userDetails?._id, value?._id)) || [];
+    console.log("result", result);
     setCommentData(result);
     setLoading(false);
   };
@@ -46,21 +51,27 @@ export default function CommentComponent({ value, handleComments }) {
 
   const handleComment = async () => {
     if (!newComment) return;
-    const token = getCookie("authToken");
-    const result = await uploadCommentApi(token, value?._id, newComment);
+    const result = await uploadCommentApi(
+      userDetails,
+      value?._id,
+      newComment.trim()
+    );
     switch (result) {
       case 401:
         setNewComment("");
-        notVerified();
         return;
       case 500:
         setNewComment("");
-        notVerified();
         return;
       default:
         setCommentData((prev) => [result, ...prev]);
         setNewComment("");
     }
+  };
+
+  const handleReplyChange = (user) => {
+    setIsReply(true);
+    setReplyTo(user);
   };
 
   return (
@@ -84,69 +95,17 @@ export default function CommentComponent({ value, handleComments }) {
             <img src={isModeDark ? Cross_White : Cross_Black} alt="cross" />
           </button>
         </div>
-        <div className="grid gap-1 pr-2 overflow-y-auto  overflow-x-hidden max-h-[80%]">
+        <div className="grid gap-1 overflow-y-auto  overflow-x-hidden max-h-[80%]">
           {loading ? (
-            <PageLoadingComponent background={false} />
+            <PageLoadingComponent background={false} screen={false} />
           ) : commentData.length > 0 ? (
             commentData.map((item) => (
-              <div
+              <CommentMap
+                item={item}
+                handleReplyChange={handleReplyChange}
                 key={item?._id}
-                className="flex flex-col w-full text-gray-800 dark:text-gray-200 justify-start"
-              >
-                <div className="my-1">
-                  <div className="flex gap-2">
-                    <img
-                      src={
-                        item?.user?.profilePicture
-                          ? `${URL}/bloggerNet/post/image/${item?.user?.profilePicture}`
-                          : isModeDark
-                          ? Profile_White
-                          : Profile_Black
-                      }
-                      alt={`Profile image for ${item?.user?.username}`}
-                      className="p-[2px] h-7 w-7 rounded-full object-cover"
-                    />
-                    <div className="flex-1">
-                      <div className="flex gap-1">
-                        <p className="text-sm font-semibold">
-                          {item?.user?.username}
-                        </p>
-                        <p className="text-xs opacity-40 flex items-center">
-                          {formatDistanceToNow(new Date(item?.createdAt), {
-                            addSuffix: true,
-                          })}
-                        </p>
-                      </div>
-                      <p className="text-lg">{item?.text}</p>
-                    </div>
-
-                    <button className="h-min w-minflex flex-col items-center justify-center text-center hover:scale-105 duration-300 focus:scale-110">
-                      <img
-                        src={isModeDark ? Like_White : Like_Black}
-                        alt={`Like`}
-                        className="h-5 w-5 object-cover"
-                      />
-                      <p className="text-md w-full">{item.likes}</p>
-                    </button>
-                  </div>
-                  <div className="mx-9">
-                    {item?.replies.length > 0 ? (
-                      <div className="flex gap-1">
-                        <button className="w-min text-opacity-80">
-                          show replies
-                        </button>
-                        <button className="w-min text-blue-400 hover:text-blue-500">
-                          reply
-                        </button>
-                      </div>
-                    ) : (
-                      <button className="w-min text-blue-400 hover:text-blue-500">
-                        reply
-                      </button>
-                    )}
-                  </div>
-                </div>
-              </div>
+                className="flex flex-col mb-5 w-full text-gray-800 dark:text-gray-200 justify-start"
+              />
             ))
           ) : (
             <p className="text-center text-gray-800 dark:text-gray-200 text-2xl">
@@ -154,13 +113,34 @@ export default function CommentComponent({ value, handleComments }) {
             </p>
           )}
         </div>
-        <div className="w-full flex items-center fixed bottom-16 left-0 px-5 py-3 dark:bg-[#111111] bg-gray-300 rounded-xl">
-          <div className="flex items-center w-full px-2 py-1 rounded-md bg-gray-100 dark:bg-[#333333]">
+        <div className="w-full flex flex-col items-center fixed bottom-16 left-0 px-5 py-3 dark:bg-[#111111] bg-gray-300 ">
+          <div
+            className={`z-[10] flex items-center w-full px-2 py-1 rounded-t-md bg-gray-100 dark:bg-[#333333] justify-end transition-all duration-300 ease-out ${
+              isReply
+                ? "opacity-60 translate-y-0"
+                : "opacity-0 translate-y-10 pointer-events-none"
+            }`}
+          >
+            <p className="flex-1 px-3">Replying to {replyTo}</p>
+            <button
+              onClick={() => {
+                setIsReply(false);
+              }}
+            >
+              <img src={isModeDark ? Cross_White : Cross_Black} alt="cross" />
+            </button>
+          </div>
+
+          <div
+            className={`z-[11] flex items-center w-full px-2 py-1 bg-gray-100 dark:bg-[#333333] ${
+              isReply ? "rounded-b-md" : "rounded-md"
+            }`}
+          >
             <input
               value={newComment}
               onChange={(e) => setNewComment(e.target.value)}
               type="text"
-              placeholder="Add a comment..."
+              placeholder="Write a comment..."
               className="bg-gray-100 dark:bg-[#333333] border-none focus:ring-0 w-full"
             />
             <button onClick={handleComment}>
@@ -174,5 +154,72 @@ export default function CommentComponent({ value, handleComments }) {
         </div>
       </div>
     </div>
+  );
+}
+
+function CommentMap({ item, handleReplyChange }) {
+  const { userDetails } = useAuth();
+  const { isModeDark } = useMode();
+  const [isLiked, setIsLiked] = useState(item?.liked);
+  const [likesCount, setLikesCount] = useState((item?.likes).length || 0);
+  const handleLikeClick = async () => {
+    if (!isLiked) {
+      setLikesCount((prev) => prev + 1);
+      setIsLiked(true);
+      await likeCommentApi(userDetails?._id, item?._id, true);
+    } else {
+      setLikesCount((prev) => prev - 1);
+      setIsLiked(false);
+      await likeCommentApi(userDetails?._id, item?._id, false);
+    }
+  };
+  return (
+    <>
+      <div className="flex gap-2 items-center">
+        <img
+          src={
+            item?.user?.profilePicture
+              ? `${URL}/bloggerNet/post/image/${item?.user?.profilePicture}`
+              : isModeDark
+              ? Profile_White
+              : Profile_Black
+          }
+          alt={`Profile image for ${item?.user?.username}`}
+          className="p-[2px] h-7 w-7 rounded-full object-cover mr-1"
+        />
+        <p className="text-sm font-semibold">{item?.user?.username}</p>
+        <p className="text-xs opacity-40 flex items-center">
+          {formatDistanceToNow(new Date(item?.createdAt), {
+            addSuffix: true,
+          })}
+        </p>
+      </div>
+      <div className="grid grid-cols-[10fr_1fr] gap-x-1 justify-start">
+        <div>
+          <p className="text-lg break-words">{item?.text}</p>
+          <button
+            onClick={() => handleReplyChange(item?.user?.username)}
+            className="text-sm text-left opacity-50 hover:opacity-70 duration-150"
+          >
+            Reply
+          </button>
+        </div>
+        <button
+          className="m-auto grid grid-rows-2 justify-center hover:scale-105 duration-300 focus:scale-110 text-center"
+          onClick={handleLikeClick}
+        >
+          <img
+            src={isLiked ? Like_Red : isModeDark ? Like_White : Like_Black}
+            alt={`Like`}
+            className="h-5 w-5 mx-auto object-cover"
+          />
+          <NumberFormatter number={likesCount} />
+        </button>
+
+        {item?.replies.length > 0 && (
+          <button className="w-full text-opacity-80">view replies..</button>
+        )}
+      </div>
+    </>
   );
 }

@@ -19,7 +19,6 @@ export default function HomePage() {
     setLoading(true);
     const token = getCookie("authToken");
     const result = (await fetchPostApi(token, postData.length)) || [];
-    console.log("Result", result);
     setPostData((prev) => [...prev, ...result]);
     setLoading(false);
   };
@@ -46,7 +45,7 @@ export default function HomePage() {
                 <Suspense
                   fallback={
                     <div className="w-full py-40 my-4">
-                      <PageLoadingComponent background={false} />
+                      <PageLoadingComponent background={false} screen={false} />
                     </div>
                   }
                 >

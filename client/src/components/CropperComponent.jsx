@@ -76,7 +76,7 @@ export default function CropperComponent({ src, handleCrop, aspect = 16 / 9 }) {
   };
 
   return pageLoading ? (
-    <PageLoadingComponent background={false} />
+    <PageLoadingComponent background={false} screen={false} />
   ) : (
     <div className="flex flex-col gap-2 bg-black bg-opacity-20 p-2">
       <ReactCrop

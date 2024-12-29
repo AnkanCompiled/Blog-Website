@@ -1,12 +1,13 @@
 import express from "express";
-import { authenticate } from "../middleware/tokenMiddleware.js";
 import {
   fetchController,
   uploadController,
+  likesController,
 } from "../controller/commentController.js";
 const commentRoutes = express.Router();
 
-commentRoutes.post("/", authenticate, fetchController);
-commentRoutes.post("/upload", authenticate, uploadController);
+commentRoutes.post("/", fetchController);
+commentRoutes.post("/upload", uploadController);
+commentRoutes.post("/likes", likesController);
 
 export default commentRoutes;

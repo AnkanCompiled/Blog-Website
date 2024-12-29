@@ -19,7 +19,11 @@ export default function SettingPage() {
       case "account":
         document.title = "Account";
         return (
-          <Suspense fallback={<PageLoadingComponent background={false} />}>
+          <Suspense
+            fallback={
+              <PageLoadingComponent background={false} screen={false} />
+            }
+          >
             <AccountComponent />
           </Suspense>
         );

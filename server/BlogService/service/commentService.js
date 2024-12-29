@@ -1,6 +1,6 @@
 import { uploadDb } from "../db/commentDb.js";
 import AppError from "../error/AppError.js";
-import { addCommentToPost, fetchCommentsDb } from "../db/postDb.js";
+import { addCommentToPost, fetchCommentsDb, likeDb } from "../db/postDb.js";
 
 export async function uploadService(userId, postId, comment) {
   try {
@@ -21,15 +21,38 @@ export async function uploadService(userId, postId, comment) {
 export async function fetchService(userId, postId) {
   try {
     const storedComments = await fetchCommentsDb(postId);
+    if (storedComments.length < 2) {
+      storedComments[0].liked = userId
+        ? storedComments[0]?.likes.some((likeId) => likeId.equals(userId))
+        : false;
+      return storedComments;
+    }
     storedComments.sort((a, b) => {
+      const aLiked = userId
+        ? a.likes.some((likeId) => likeId.equals(userId))
+        : false;
+      const bLiked = userId
+        ? b.likes.some((likeId) => likeId.equals(userId))
+        : false;
+      a.liked = aLiked;
+      b.liked = bLiked;
+
       if (a.user === userId && b.user !== userId) return -1;
       if (a.user !== userId && b.user === userId) return 1;
-      return b.likes - a.likes;
+      return b.likes.length - a.likes.length;
     });
-    console.log("storedComments", storedComments);
-    return storedComments.reverse();
+    return storedComments;
   } catch (error) {
     console.error("Error fetching comment:", error);
+    throw new AppError(error.message, error.statusCode || 500);
+  }
+}
+
+export async function likesService(userId, commentId, value) {
+  try {
+    await likeDb(userId, commentId, value);
+  } catch (error) {
+    console.error("Error liking comment:", error);
     throw new AppError(error.message, error.statusCode || 500);
   }
 }

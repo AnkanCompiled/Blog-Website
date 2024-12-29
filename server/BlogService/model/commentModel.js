@@ -4,7 +4,7 @@ const repliesSchema = new Schema(
   {
     user: { type: Schema.Types.ObjectId, ref: "User", required: true },
     text: { type: String, required: true },
-    likes: { type: Number, default: 0 },
+    likes: [{ type: Schema.Types.ObjectId, ref: "User", default: [] }],
   },
   { timestamps: true }
 );
@@ -17,7 +17,7 @@ const commentSchema = new Schema(
       type: [repliesSchema],
       default: [],
     },
-    likes: { type: Number, default: 0 },
+    likes: [{ type: Schema.Types.ObjectId, ref: "User", default: [] }],
   },
   { timestamps: true }
 );

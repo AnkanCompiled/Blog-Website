@@ -1,15 +1,17 @@
-import { searchUserByIdDb } from "../db/userDb.js";
-import { dataService } from "../service/userService.js";
-import { uploadService, fetchService } from "../service/commentService.js";
+import {
+  uploadService,
+  fetchService,
+  likesService,
+} from "../service/commentService.js";
 
 export async function uploadController(req, res, next) {
   try {
-    const user = await dataService(req.user.id);
+    const user = req.body.user;
     if (!user) {
       return res.status(401).json({ message: "Email not verified" });
     }
     const commentData = await uploadService(
-      _id,
+      user._id,
       req.body.postId,
       req.body.comment
     );
@@ -31,9 +33,23 @@ export async function uploadController(req, res, next) {
 
 export async function fetchController(req, res, next) {
   try {
-    const user = await dataService(req.user.id);
-    const data = await fetchService(user ? user._id : "", req.body.postId);
+    const data = await fetchService(
+      req.body.id ? req.body.id : "",
+      req.body.postId
+    );
     res.status(200).json(data);
+  } catch (error) {
+    next(error);
+  }
+}
+
+export async function likesController(req, res, next) {
+  try {
+    if (!req.body.id) {
+      return res.status(401).json({ message: "Email not verified" });
+    }
+    await likesService(req.body.id, req.body.commentId, req.body.value);
+    res.status(200).json({ message: "Liked or Un-liked comment successfully" });
   } catch (error) {
     next(error);
   }

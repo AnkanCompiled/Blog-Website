@@ -53,7 +53,7 @@ export default function LandingPage() {
       <NavbarComponent />
       <div
         className={`xl:grid xl:grid-cols-2 xl:px-20 ${
-          animateText ? "slide-up" : ""
+          animateText ? "slide-up" : "opacity-0"
         }`}
       >
         <div className={`hidden xl:block p-16`}>
