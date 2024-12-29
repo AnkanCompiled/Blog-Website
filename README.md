@@ -1,6 +1,6 @@
 # Blogging Website
 
-A feature-rich blogging platform that allows users to create, share, and interact with blog posts. The platform leverages modern technologies such as **Vite React**, **Node.js**, **Express**, **MongoDB**, and **MySQL** to provide a seamless user experience.
+A feature-rich blogging platform that allows users to create, share, and interact with blog posts. The platform leverages modern technologies such as **Vite React**, **Node.js**, **Express**, **MongoDB**, and **MySQL** to provide a seamless user experience. The backend is created via microservice architecture.
 
 ---
 
