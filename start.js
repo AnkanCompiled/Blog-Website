@@ -1,20 +1,21 @@
 const { exec } = require("child_process");
+const path = require("path");
 
 const commands = [
   {
-    path: "C:\\Users\\Ankan\\OneDrive\\Documents\\GitHub\\Blog-Website\\client",
+    path: path.join(__dirname, "client"),
     command: "npm run dev",
   },
   {
-    path: "C:\\Users\\Ankan\\OneDrive\\Documents\\GitHub\\Blog-Website\\server\\ApiGateway",
+    path: path.join(__dirname, "server", "ApiGateway"),
     command: "npm start",
   },
   {
-    path: "C:\\Users\\Ankan\\OneDrive\\Documents\\GitHub\\Blog-Website\\server\\BlogService",
+    path: path.join(__dirname, "server", "BlogService"),
     command: "npm start",
   },
   {
-    path: "C:\\Users\\Ankan\\OneDrive\\Documents\\GitHub\\Blog-Website\\server\\UserService",
+    path: path.join(__dirname, "server", "UserService"),
     command: "npm start",
   },
 ];
