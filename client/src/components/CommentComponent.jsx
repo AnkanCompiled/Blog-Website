@@ -51,6 +51,8 @@ export default function CommentComponent({ value, handleComments }) {
 
   const handleComment = async () => {
     if (!newComment) return;
+    if (isReply) {
+    }
     const result = await uploadCommentApi(
       userDetails,
       value?._id,
