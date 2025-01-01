@@ -102,6 +102,8 @@ export async function uploadReplyService(userId, commentId, reply) {
 export async function fetchRepliesService(userId, commentId) {
   try {
     const storedComments = await fetchRepliesDb(commentId);
+    console.log(storedComments);
+
     const sortedStoredComments = await commentSortService(
       userId,
       storedComments

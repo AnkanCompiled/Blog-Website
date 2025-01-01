@@ -89,14 +89,28 @@ html {
   @apply text-gray-600 dark:text-gray-400 text-2xl  transition-colors;
 }
 
-.ql-container {
+.contentDiv {
+  @apply rounded-md bg-gray-300 dark:bg-[#444444] dark:text-gray-100 text-gray-800;
+}
+
+/* Custom Quill Styles */
+.ql-toolbar {
+  @apply dark:bg-gray-400;
   border: none !important;
 }
 
-.ql-toolbar {
-  border: none !important;
+.ql-snow {
+  @apply border-0; /* Ensure no border for the Snow theme */
+}
+
+.ql-container {
+  padding: 0 !important; /* Remove padding */
+  margin: 0 !important; /* Remove margin */
+  border: none !important; /* No border */
 }
 
 .ql-editor {
-  border: none !important;
+  padding: 0 !important; /* Remove padding inside the editor */
+  margin: 0 !important; /* Remove margin */
+  border: none !important; /* Remove any border */
 }

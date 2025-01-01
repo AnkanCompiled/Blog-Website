@@ -11,7 +11,7 @@ export default function EmailVerifiedComponent({ buttonProp = true }) {
 
   return (
     <div
-      className={`fixed z-[15] pointer-events-none w-screen left-0 top-0 flex justify-center  ${
+      className={`fixed z-[12] pointer-events-none w-screen left-0 top-0 flex justify-center  ${
         animateWindow ? "slide-down" : "opacity-0"
       }`}
     >

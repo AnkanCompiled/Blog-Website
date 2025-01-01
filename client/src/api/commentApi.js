@@ -50,3 +50,36 @@ export const likeCommentApi = async (id, commentId, value) => {
     return error?.status;
   }
 };
+
+export const fetchRepliesApi = async (userId, commentId) => {
+  try {
+    const response = await axios.post(`${URL}/bloggerNet/comment/replies`, {
+      id: userId,
+      commentId: commentId,
+    });
+    return response.data;
+  } catch (error) {
+    console.error(
+      "Error during fetching replies data:",
+      error.response ? error.response.data : error.message
+    );
+    return error?.response;
+  }
+};
+
+export const uploadReplyApi = async (data, commentId, reply) => {
+  try {
+    const response = await axios.post(`${URL}/bloggerNet/comment/uploadReply`, {
+      user: data,
+      commentId: commentId,
+      reply: reply,
+    });
+    return response.data;
+  } catch (error) {
+    console.error(
+      "Error commenting:",
+      error.response ? error.response.data : error.message
+    );
+    return error?.status;
+  }
+};

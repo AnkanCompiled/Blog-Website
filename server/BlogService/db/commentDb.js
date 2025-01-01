@@ -43,5 +43,5 @@ export const uploadReplyDb = async (data) => {
 export const addReplyToComment = async (commentId, replyId) => {
   const comments = await commentModel.findById(commentId);
   comments.replies.push(replyId);
-  await post.save();
+  await comments.save();
 };
