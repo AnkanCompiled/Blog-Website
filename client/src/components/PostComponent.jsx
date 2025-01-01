@@ -12,6 +12,7 @@ import { formatDistanceToNow } from "date-fns";
 import { useMode } from "../context/modeContext";
 import LikeComponent from "./LikeComponent";
 import PageLoadingComponent from "./PageLoadingComponent";
+import CommentLoadingComponent from "./CommentLoadingComponent";
 const CommentComponent = lazy(() => import("./CommentComponent"));
 const URL = import.meta.env.VITE_BACKEND_URL;
 
@@ -178,22 +179,9 @@ function CommentArea({ value, handleComments, isModeDark }) {
             <img src={isModeDark ? Cross_White : Cross_Black} alt="cross" />
           </button>
         </div>
-
-        <div className="flex-1">
-          <div className="flex flex-row gap-2 w-full">
-            <div className="animate-pulse bg-gray-300 dark:bg-gray-700 w-7 h-7 rounded-full"></div>
-            <div className="flex flex-col gap-2 w-full">
-              <div className="animate-pulse bg-gray-300 dark:bg-gray-700 w-36 h-5 rounded-lg"></div>
-              <div className="animate-pulse bg-gray-300 dark:bg-gray-700 w-full h-5 rounded-xl"></div>
-              <div className="animate-pulse bg-gray-300 dark:bg-gray-700 w-64 h-5 rounded-xl"></div>
-            </div>
-            <div className="w-7"></div>
-          </div>
-        </div>
-
-        {/* <Suspense fallback={<PageLoadingComponent background={false} />}>
-              <CommentComponent value={value} handleComments={handleComments} />
-            </Suspense> */}
+        <Suspense fallback={<CommentLoadingComponent />}>
+          <CommentComponent value={value} />
+        </Suspense>
       </div>
     </div>
   );
