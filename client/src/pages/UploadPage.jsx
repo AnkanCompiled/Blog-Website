@@ -52,6 +52,11 @@ export default function UploadPage() {
 
     quillInstanceRef.current = quill;
 
+    const qlEditor = editor.querySelector(".ql-editor");
+    if (qlEditor) {
+      qlEditor.classList.add("text-base", "min-h-[150px]");
+    }
+
     quill.on("text-change", (delta, oldDelta, source) => {
       setErrors("");
       setQuillLength(quillInstanceRef.current?.getContents().length() - 1);

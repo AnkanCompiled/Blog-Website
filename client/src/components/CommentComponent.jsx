@@ -95,12 +95,12 @@ export default function CommentComponent({ value }) {
           Be the first to share your thoughts...!
         </p>
       )}
-      <div className="w-full fixed bottom-0 left-0 px-2 py-5 dark:bg-[#111111] bg-gray-300 ">
+      <div className="w-full fixed bottom-0 left-0 px-2 py-5 pointer-events-none">
         <div
-          className={`z-[10] flex items-center w-full px-2 py-1 rounded-t-md bg-gray-100 dark:bg-[#333333] justify-end transition-all duration-300 ease-out ${
+          className={`z-[10] flex items-center w-full px-2 py-1 rounded-t-md bg-gray-200 dark:bg-[#222222] justify-end transition-all duration-300 ease-out ${
             isReply
-              ? "opacity-60 translate-y-0"
-              : "opacity-0 translate-y-10 pointer-events-none"
+              ? "opacity-100 translate-y-0 pointer-events-auto"
+              : "opacity-0 translate-y-full pointer-events-none"
           }`}
         >
           <p className="flex-1 px-3">Replying to {replyTo}</p>
@@ -197,7 +197,7 @@ function CommentMap({ comment, isModeDark, handleReplyChange }) {
       {replyCount > 0 && (
         <button
           onClick={toggleReplies}
-          className=" w-full flex pr-20  justify-center gap-1 opacity-60 text-sm"
+          className=" w-full flex justify-center gap-1 opacity-60 text-sm"
         >
           {showReply ? (
             `Hide ${replyCount > 1 ? "replies" : "reply"}`
@@ -260,14 +260,14 @@ function CommentUi({ comment, userDetails, isModeDark, extraUi }) {
               onClick={handleToggle}
               className="px-1 opacity-50 hover:opacity-70 duration-150"
             >
-              {isExpanded ? "" : "..more"}
+              {isExpanded ? "show less.." : "..show more"}
             </button>
           )}
         </p>
         {extraUi && <div>{extraUi}</div>}
       </div>
       <button
-        className="m-auto grid grid-rows-2 justify-center hover:scale-105 duration-300 focus:scale-110 text-center"
+        className="m-auto text-xs grid grid-rows-2 justify-center hover:scale-105 duration-300 focus:scale-110 text-center"
         onClick={handleLikeClick}
       >
         <img
