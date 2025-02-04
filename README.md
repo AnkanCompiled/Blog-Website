@@ -6,7 +6,6 @@ A feature-rich blogging platform that allows users to create and interact with b
 
 ## 🚀 Features
 
-- Create, edit, and delete blog posts.
 - Commenting and interaction features for posts.
 - Dynamic content rendering with Vite and React.
 - Backend API for managing posts and user data.
