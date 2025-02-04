@@ -35,7 +35,7 @@ function LoggedComponent() {
   const { isModeDark } = useMode();
 
   return (
-    <div className=" grid grid-cols-3 gap-6 items-center">
+    <div className=" grid grid-cols-2 gap-6 items-center">
       <NavLink
         to="/upload"
         className={({ isActive }) =>
@@ -48,7 +48,7 @@ function LoggedComponent() {
           alt="Upload"
         />
       </NavLink>
-      <NavLink
+      {/* <NavLink
         to="/profile"
         className={({ isActive }) =>
           `${isActive ? "scale-90" : "hover:scale-95 w-9 h-9 "}`
@@ -59,7 +59,7 @@ function LoggedComponent() {
           src={isModeDark ? Profile_White : Profile_Black}
           alt="Profile"
         />
-      </NavLink>
+      </NavLink> */}
       <NavLink
         to="/setting"
         className={({ isActive }) =>

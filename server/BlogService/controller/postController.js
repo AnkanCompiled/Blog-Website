@@ -56,11 +56,10 @@ export async function postImageController(req, res, next) {
 
 export async function likesController(req, res, next) {
   try {
-    const user = await dataService(req.user.id);
-    if (!user) {
+    if (!req.body.id) {
       return res.status(401).json({ message: "Email not verified" });
     }
-    await likesService(user._id, req.body.postId, req.body.value);
+    await likesService(req.body.id, req.body.postId, req.body.value);
     res.status(200).json({ message: "Liked or Un-liked post successfully" });
   } catch (error) {
     next(error);

@@ -63,6 +63,7 @@ function commentSortService(userId, storedComments) {
 export async function fetchService(userId, postId) {
   try {
     const storedComments = await fetchCommentsDb(postId);
+    if (!storedComments) return [];
     const sortedStoredComments = await commentSortService(
       userId,
       storedComments
@@ -74,9 +75,9 @@ export async function fetchService(userId, postId) {
   }
 }
 
-export async function likesService(userId, commentId, value) {
+export async function likesService(userId, commentId, value, isReply) {
   try {
-    await likeDb(userId, commentId, value);
+    await likeDb(userId, commentId, value, isReply);
   } catch (error) {
     console.error("Error liking comment:", error);
     throw new AppError(error.message, error.statusCode || 500);

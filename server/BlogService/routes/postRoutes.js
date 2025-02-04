@@ -14,7 +14,7 @@ postRoutes.get("/", authenticate, fetchController);
 
 postRoutes.get("/image/:imageName", postImageController);
 
-postRoutes.post("/likes", authenticate, likesController);
+postRoutes.post("/likes", likesController);
 
 postRoutes.post(
   "/upload",

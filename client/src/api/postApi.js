@@ -42,21 +42,13 @@ export const fetchPostApi = async (token, skip) => {
   }
 };
 
-export const likePostApi = async (token, postId, value) => {
+export const likePostApi = async (id, postId, value) => {
   try {
-    const response = await axios.post(
-      `${URL}/bloggerNet/post/likes`,
-      {
-        postId: postId,
-        value: value,
-      },
-      {
-        headers: {
-          Authorization: `Bearer ${token}`,
-          "Content-Type": "application/json",
-        },
-      }
-    );
+    const response = await axios.post(`${URL}/bloggerNet/post/likes`, {
+      id: id,
+      postId: postId,
+      value: value,
+    });
     return response.data;
   } catch (error) {
     console.error(

@@ -7,11 +7,13 @@ export const uploadDb = async (data) => {
   return result;
 };
 
-export const likeDb = async (userId, commentId, value) => {
+export const likeDb = async (userId, commentId, value, isReply) => {
   const update = value
     ? { $addToSet: { likes: userId } }
     : { $pull: { likes: userId } };
-  await commentModel.findByIdAndUpdate(commentId, update);
+  isReply
+    ? await replyModel.findByIdAndUpdate(commentId, update)
+    : await commentModel.findByIdAndUpdate(commentId, update);
 };
 
 export const fetchRepliesDb = async (id) => {

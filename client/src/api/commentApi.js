@@ -34,12 +34,13 @@ export const uploadCommentApi = async (data, postId, comment) => {
   }
 };
 
-export const likeCommentApi = async (id, commentId, value) => {
+export const likeCommentApi = async (id, commentId, value, isReply = false) => {
   try {
     const response = await axios.post(`${URL}/bloggerNet/comment/likes`, {
       id: id,
       commentId: commentId,
       value: value,
+      isReply: isReply,
     });
     return response.data;
   } catch (error) {

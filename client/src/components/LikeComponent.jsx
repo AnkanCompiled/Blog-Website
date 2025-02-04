@@ -9,55 +9,28 @@ import { useAuth } from "../context/authContext";
 import NumberFormatter from "./NumberFormatter";
 
 export default function LikeComponent({ value }) {
-  const { useDetails } = useAuth();
+  const { userDetails } = useAuth();
   const { verifiedError } = useAuth();
   const { isModeDark } = useMode();
   const [isLiked, setIsLiked] = useState(value?.liked);
   const [likesCount, setLikesCount] = useState((value?.likes).length);
   const handleLikeClick = async () => {
-    const token = getCookie("authToken");
-    if (!isLiked) {
-      setLikesCount((prev) => prev + 1);
-      setIsLiked(true);
-      await likePostApi(token, value?._id, true);
-    } else {
-      setLikesCount((prev) => prev - 1);
-      setIsLiked(false);
-      await likePostApi(token, value?._id, false);
-    }
-  };
-  const handleUserClick = async () => {
-    const token = getCookie("authToken");
-    if (!isLiked) {
-      setLikesCount((prev) => prev + 1);
-      setIsLiked(true);
-      await likePostApi(token, value?._id, true);
-    } else {
-      setLikesCount((prev) => prev - 1);
-      setIsLiked(false);
-      await likePostApi(token, value?._id, false);
-    }
+    setLikesCount((prev) => (isLiked ? prev - 1 : prev + 1));
+    setIsLiked((prev) => !prev);
+    await likePostApi(userDetails?._id, value?._id, !isLiked, true);
   };
   return (
-    <div className="flex items-center gap-1 ">
-      <button
-        disabled={verifiedError}
-        className="flex items-center gap-1 hover:scale-105 duration-300 focus:scale-110 disabled:opacity-50 disabled:hover:scale-100 disabled:focus:scale-100"
-        onClick={handleLikeClick}
-      >
-        <img
-          src={isLiked ? Like_Red : isModeDark ? Like_White : Like_Black}
-          alt={`Like`}
-          className="h-8 w-8 object-cover"
-        />
-      </button>
-      <button
-        disabled={verifiedError}
-        className="hover:scale-105 duration-300 focus:scale-110 disabled:opacity-50 disabled:hover:scale-100 disabled:focus:scale-100"
-        onClick={handleUserClick}
-      >
-        <NumberFormatter number={likesCount} />
-      </button>
-    </div>
+    <button
+      disabled={verifiedError}
+      className="flex items-center gap-1 hover:scale-105 duration-300 focus:scale-110 disabled:opacity-50 disabled:hover:scale-100 disabled:focus:scale-100"
+      onClick={handleLikeClick}
+    >
+      <img
+        src={isLiked ? Like_Red : isModeDark ? Like_White : Like_Black}
+        alt={`Like`}
+        className="h-8 w-8 object-cover"
+      />
+      <NumberFormatter number={likesCount} />
+    </button>
   );
 }

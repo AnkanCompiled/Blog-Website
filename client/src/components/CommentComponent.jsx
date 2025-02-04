@@ -57,6 +57,7 @@ export default function CommentComponent({ value }) {
     const result = isReply
       ? await uploadReplyApi(userDetails, isReply, newComment.trim())
       : await uploadCommentApi(userDetails, value?._id, newComment.trim());
+    console.log("result", result);
     switch (result) {
       case 401:
         setNewComment("");
@@ -68,7 +69,9 @@ export default function CommentComponent({ value }) {
         if (isReply) {
           setIsReply(false);
         } else {
-          setCommentData((prev) => [result, ...prev]);
+          setCommentData((prev) =>
+            Array.isArray(prev) ? [result, ...prev] : [result]
+          );
         }
         setNewComment("");
     }
@@ -114,7 +117,7 @@ export default function CommentComponent({ value }) {
         </div>
         <form
           onSubmit={handleComment}
-          className={`z-[11]  w-full max-h-10 flex items-center  px-2 bg-gray-100 dark:bg-[#333333] ${
+          className={`z-[12]  w-full max-h-10 flex items-center  px-2 bg-gray-100 dark:bg-[#333333] pointer-events-auto ${
             isReply ? "rounded-b-md" : "rounded-md"
           }`}
         >
@@ -186,6 +189,7 @@ function CommentMap({ comment, isModeDark, handleReplyChange }) {
           ) : (
             replyData.map((data) => (
               <CommentUi
+                key={data?._id}
                 comment={data}
                 userDetails={userDetails}
                 isModeDark={isModeDark}
@@ -221,7 +225,7 @@ function CommentUi({ comment, userDetails, isModeDark, extraUi }) {
   const handleLikeClick = async () => {
     setLikesCount((prev) => (isLiked ? prev - 1 : prev + 1));
     setIsLiked((prev) => !prev);
-    await likeCommentApi(userDetails?._id, comment?._id, !isLiked);
+    await likeCommentApi(userDetails?._id, comment?._id, !isLiked, true);
   };
 
   const handleToggle = () => {
@@ -233,7 +237,7 @@ function CommentUi({ comment, userDetails, isModeDark, extraUi }) {
 
   const likeIcon = isLiked ? Like_Red : isModeDark ? Like_White : Like_Black;
   return (
-    <div className="flex flex-row gap-2 w-full justify-start">
+    <div className="flex flex-row gap-2 w-full justify-start overflow-x-hidden">
       <img
         src={
           comment?.user?.profilePicture

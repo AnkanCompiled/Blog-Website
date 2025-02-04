@@ -50,7 +50,12 @@ export async function likesController(req, res, next) {
     if (!req.body.id) {
       return res.status(401).json({ message: "Email not verified" });
     }
-    await likesService(req.body.id, req.body.commentId, req.body.value);
+    await likesService(
+      req.body.id,
+      req.body.commentId,
+      req.body.value,
+      req.body.isReply
+    );
     res.status(200).json({ message: "Liked or Un-liked comment successfully" });
   } catch (error) {
     next(error);

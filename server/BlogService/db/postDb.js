@@ -1,4 +1,3 @@
-import commentModel from "../model/commentModel.js";
 import postModel from "../model/postModel.js";
 
 export const uploadDb = async (data) => {
@@ -25,7 +24,7 @@ export const likeDb = async (userId, postId, value) => {
   const update = value
     ? { $addToSet: { likes: userId } }
     : { $pull: { likes: userId } };
-  await commentModel.findByIdAndUpdate(postId, update);
+  await postModel.findByIdAndUpdate(postId, update);
 };
 
 export const addCommentToPost = async (postId, commentId) => {

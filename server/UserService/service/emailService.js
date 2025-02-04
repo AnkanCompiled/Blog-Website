@@ -15,6 +15,7 @@ export async function verifyService(token, email) {
 
 export async function getEmail(id) {
   try {
+    console.log(id);
     const email = await getEmailDb(mySqlDb, id);
     return email;
   } catch (error) {

@@ -21,6 +21,10 @@ const postSchema = new Schema(
       type: [String],
       default: [],
     },
+    links: {
+      type: [String],
+      default: [],
+    },
     visibility: {
       type: String,
       enum: ["public", "private", "followers"],
